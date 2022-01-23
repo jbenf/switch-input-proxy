@@ -10,7 +10,6 @@ import sched
 import signal
 import os
 import argparse
-import pyttsx3
 import glob
 import yaml
 
