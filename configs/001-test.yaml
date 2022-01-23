@@ -1,0 +1,53 @@
+name: Default
+devices:
+- name: HORI CO.,LTD. HORIPAD S 
+- name: usb gamepad
+# - name: SINOWEALTH Wired Gaming Mouse
+gamepads:
+  - name: Pro Controller
+    target: /dev/uart1
+    devices:
+    - name: usb gamepad
+      bindings:
+      - event: BTN_TOP2
+        invoke: L1
+      - event: BTN_PINKIE
+        invoke: R1
+      - event: BTN_THUMB
+        invoke: A
+      - event: BTN_THUMB2
+        invoke: B
+      - event: BTN_TOP
+        invoke: Y
+      - event: BTN_TRIGGER
+        invoke: X
+      - event: BTN_BASE4
+        invoke: START
+      - event: BTN_BASE3
+        invoke: SELECT
+      - event: ABS_X
+        state: 0
+        invoke: DPAD_LEFT
+      # - event: ABS_X
+      #   state: 127
+      #   invoke: DPAD_X0
+      - event: ABS_X
+        state: 255
+        invoke: DPAD_RIGHT
+      - event: ABS_Y
+        state: 0
+        invoke: DPAD_UP
+      # - event: ABS_Y
+      #   state: 127
+      #   invoke: DPAD_Y0
+      - event: ABS_Y
+        state: 255
+        invoke: DPAD_DOWN
+
+    - name: SINOWEALTH Wired Gaming Mouse
+      bindings:
+      - event: ABS_X
+        invoke: ANALOG_L_X
+      - event: ABS_Y
+        invoke: ANALOG_L_Y
+    
