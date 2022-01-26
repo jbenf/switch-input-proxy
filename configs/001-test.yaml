@@ -1,8 +1,8 @@
 name: Default
 i2c_device: 1
 devices:
-- name: HORI CO.,LTD. POKKEN CONTROLLER 
-#- name: usb gamepad
+#- name: HORI CO.,LTD. POKKEN CONTROLLER 
+- name: usb gamepad
 # - name: SINOWEALTH Wired Gaming Mouse
 gamepads:
   - name: Pro Controller

@@ -23,6 +23,10 @@ class Event(NamedTuple):
     index: int
     ev: InputEvent
 
+class Binding(NamedTuple):
+    invoke: str
+    status: int
+
  
 def producer(queue, relQueue, name: str, index: int):
     if VERBOSE:
@@ -30,7 +34,6 @@ def producer(queue, relQueue, name: str, index: int):
     while True:
         try:
             device = findDevice(name, index)
-            id = '%s [%i]' % (name, index)
             while True:
                 try:
                     events = device.read()
@@ -60,6 +63,7 @@ def consumer(queue):
                 for b in d.get('bindings'):
                     if b.get('event') == ev.ev.code and ev.ev.device.name == deviceName and ev.index == deviceIndex:
                         bState = b.get('state', -1)
+                        print(vars(ev.ev))
                         if bState > -1:
                             if bState == ev.ev.state:
                                 print(gp.get('name'), b.get('invoke'), 1)
@@ -68,19 +72,20 @@ def consumer(queue):
                         else:
                             print(gp.get('name'), b.get('invoke'), ev.ev.state)
     
-def findDevice(name: str, index: int):
+def findDevice(name: str, aIndex: int):
+    index = aIndex
     for d in devices.all_devices:
         if d.name == name:
             if index == 0:
                 if VERBOSE:
-                    print('Device found: ', d.name, index)
+                    print('Device found: ', d.name, aIndex)
                 return d
             else:
                 index -= 1
     if VERBOSE:
         print('Device not found:', name)
         print(devices.all_devices)
-    raise NameError('Device not found:', name, index)
+    raise NameError('Device not found:', name, aIndex)
 
 global relInputEvent
 relInputEvent = None
@@ -145,22 +150,42 @@ def loadConfig(path):
             print(exc)
             os._exit(1)
 
-def initializeControllers():
-    ret = []
-    connector = I2CConnector(config.i2c_device)
-    for gpc in config.gamepads:
-        connection = I2CConnection(gpc.address, connector)
+def initializeGamepads():
+    ret = {}
+    connector = I2CConnector(config.get('i2c_device'))
+    for gpc in config.get('gamepads'):
+        connection = I2CConnection(gpc.get('address'), connector)
         gp = Gamepad(connection)
-        ret.append(gp)
+        ret[connection.address] = gp
     
     return ret
+
+def initializeBindings(gamepads: dict):
+    ret = ()
+
+    deviceNames = set([d.get('name') for d in config.get('devices')])
+    print(deviceNames)
+
+    for d in config.get('devices'):
+        n = d.get('name')
+        i = d.get('index', 0)
+        
+        for gpc in config.get('gamepads'):
+            gamepad = gamepads[gpc.get('address')]
+            for gpc_device in gpc.get('devices'):
+                if(gpc_device.get('name') == n):
+                    for binding in gpc_device.get('bindings'):
+                        pass
+
+    return ret
+
  
 def main():
     queue = Queue(5000)
     relQueue = Queue(5000)
     scheduler = sched.scheduler(time.time, time.sleep)
-    controllers = initializeControllers(config)
-    
+    gamepads = initializeGamepads()
+    bindings = initializeBindings(gamepads)
 
     if VERBOSE:
         print(config)
@@ -184,22 +209,23 @@ def main():
     for c in consumers:
         c.start()
 
+
     signal.signal(signal.SIGINT, signal_handler)
 
     scheduler.run()
     
  
-    # print('joining producers')
-    # for p in producers:
-    #     p.join()
+    print('joining producers')
+    for p in producers:
+        p.join()
  
-    # # wait for the remaining tasks to be processed
-    # print('joining queue')
-    # queue.join()
+    # wait for the remaining tasks to be processed
+    print('joining queue')
+    queue.join()
  
-    # # cancel the consumers, which are now idle
-    # for c in consumers:
-    #     c.cancel()
+    # cancel the consumers, which are now idle
+    for c in consumers:
+        c.cancel()
 
 
 
