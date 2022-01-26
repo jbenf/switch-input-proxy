@@ -29,18 +29,18 @@ gamepads:
       - event: ABS_X
         state: 0
         invoke: DPAD_LEFT
-      # - event: ABS_X
-      #   state: 127
-      #   invoke: DPAD_X0
+      - event: ABS_X
+        state: 127
+        invoke: DPAD_X0
       - event: ABS_X
         state: 255
         invoke: DPAD_RIGHT
       - event: ABS_Y
         state: 0
         invoke: DPAD_UP
-      # - event: ABS_Y
-      #   state: 127
-      #   invoke: DPAD_Y0
+      - event: ABS_Y
+        state: 127
+        invoke: DPAD_Y0
       - event: ABS_Y
         state: 255
         invoke: DPAD_DOWN

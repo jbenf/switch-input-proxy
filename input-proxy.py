@@ -23,10 +23,6 @@ class Event(NamedTuple):
     index: int
     ev: InputEvent
 
-class Binding(NamedTuple):
-    invoke: str
-    status: int
-
  
 def producer(queue, relQueue, name: str, index: int):
     if VERBOSE:
@@ -53,24 +49,39 @@ def producer(queue, relQueue, name: str, index: int):
             os._exit(0)
         
  
-def consumer(queue):
+def consumer(queue, bindings: dict):
     while True:
-        ev = queue.get() 
-        for gp in config.get('gamepads'):
-            for d in gp.get('devices'):
-                deviceIndex = d.get('index', 0)
-                deviceName = d.get('name')
-                for b in d.get('bindings'):
-                    if b.get('event') == ev.ev.code and ev.ev.device.name == deviceName and ev.index == deviceIndex:
-                        bState = b.get('state', -1)
-                        print(vars(ev.ev))
-                        if bState > -1:
-                            if bState == ev.ev.state:
-                                print(gp.get('name'), b.get('invoke'), 1)
-                            else:
-                                print(gp.get('name'), b.get('invoke'), 0)
-                        else:
-                            print(gp.get('name'), b.get('invoke'), ev.ev.state)
+        ev = queue.get()
+        try:
+            codeBindings = bindings[ev.ev.device.name][ev.index].get(ev.ev.code, None)
+            if codeBindings == None:
+                continue
+            for binding in codeBindings:
+                if binding[2] == -1:
+                    binding[0].event(binding[1], ev.ev.state)
+                elif binding[2] == ev.ev.state:
+                    binding[0].event(binding[1], 1)
+                else:
+                    binding[0].event(binding[1], 0)
+                
+        except Exception as err:
+            print('Error: ', err)
+            raise err
+
+        # for gp in config.get('gamepads'):
+        #     for d in gp.get('devices'):
+        #         deviceIndex = d.get('index', 0)
+        #         deviceName = d.get('name')
+        #         for b in d.get('bindings'):
+        #             if b.get('event') == ev.ev.code and ev.ev.device.name == deviceName and ev.index == deviceIndex:
+        #                 bState = b.get('state', -1)
+        #                 if bState > -1:
+        #                     if bState == ev.ev.state:
+        #                         print(gp.get('name'), b.get('invoke'), 1)
+        #                     else:
+        #                         print(gp.get('name'), b.get('invoke'), 0)
+        #                 else:
+        #                     print(gp.get('name'), b.get('invoke'), ev.ev.state)
     
 def findDevice(name: str, aIndex: int):
     index = aIndex
@@ -161,23 +172,33 @@ def initializeGamepads():
     return ret
 
 def initializeBindings(gamepads: dict):
-    ret = ()
+    nameDict = {}
 
-    deviceNames = set([d.get('name') for d in config.get('devices')])
-    print(deviceNames)
 
     for d in config.get('devices'):
         n = d.get('name')
         i = d.get('index', 0)
+
+        indexDict = nameDict.get(n, {})
+        nameDict[n] = indexDict
+        eventDict = indexDict.get(i, {})
+        indexDict[i] = eventDict
         
         for gpc in config.get('gamepads'):
             gamepad = gamepads[gpc.get('address')]
             for gpc_device in gpc.get('devices'):
-                if(gpc_device.get('name') == n):
-                    for binding in gpc_device.get('bindings'):
-                        pass
+                if gpc_device.get('name') == n and gpc_device.get('index', 0) == i:
+                    for b in gpc_device.get('bindings'):
+                        event = b.get('event')
+                        invoke = b.get('invoke')
+                        state = b.get('state', -1)
 
-    return ret
+                        bindingArray = eventDict.get(event, [])
+                        eventDict[event] = bindingArray
+                        bindingArray.append((gamepad, invoke, state))
+
+
+    return nameDict
 
  
 def main():
@@ -188,14 +209,18 @@ def main():
     bindings = initializeBindings(gamepads)
 
     if VERBOSE:
+        print('Config: ')
         print(config)
+
+        print('Bindings: ')
+        print(bindings)
  
     # fire up the both producers and consumers
 
     producers = [Thread(target=producer, args=(queue, relQueue, d.get('name'), d.get('index', 0) | 0,))
                  for d in config.get('devices')]
     
-    consumers = [Thread(target=consumer, args=(queue, ))]
+    consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
     scheduler.enter(0.05, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
     
@@ -214,13 +239,14 @@ def main():
 
     scheduler.run()
     
- 
-    print('joining producers')
+    if VERBOSE:
+        print('joining producers')
     for p in producers:
         p.join()
  
     # wait for the remaining tasks to be processed
-    print('joining queue')
+    if VERBOSE:
+        print('joining queue')
     queue.join()
  
     # cancel the consumers, which are now idle
