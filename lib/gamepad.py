@@ -36,8 +36,6 @@ class hat_mask(NamedTuple):
     DPAD_RIGHT = 2**1
     DPAD_DOWN  = 2**2
     DPAD_LEFT  = 2**3
-    DPAD_X0    = 2**4
-    DPAD_Y0    = 2**5
 
 class hat_values(NamedTuple):
     UP         = 0x00
@@ -136,7 +134,5 @@ class Gamepad():
         'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
         'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
         'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
-        'DPAD_X0': lambda self, state: handleHat(self, hat_mask.DPAD_X0, state),
-        'DPAD_Y0': lambda self, state: handleHat(self, hat_mask.DPAD_Y0, state),
     }
     
