@@ -91,7 +91,7 @@ def handleHat(self, mask: int, state: int):
     if bitmap == hat_values.CENTER:
         self.bitmap_HAT = 0
 
-    self.connection.write(Registers.HAT, [self.bitmap_HAT])
+    self.connection.write(Registers.HAT, [self.bitmap])
     
 
 class Gamepad():
