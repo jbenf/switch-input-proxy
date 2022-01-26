@@ -23,9 +23,9 @@ gamepads:
       - event: BTN_TRIGGER
         invoke: X
       - event: BTN_BASE4
-        invoke: START
+        invoke: PLUS
       - event: BTN_BASE3
-        invoke: SELECT
+        invoke: MINUS
       - event: ABS_X
         state: 0
         invoke: DPAD_LEFT
