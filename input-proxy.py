@@ -150,8 +150,8 @@ def initializeControllers():
     connector = I2CConnector(config.i2c_device)
     for gpc in config.gamepads:
         connection = I2CConnection(gpc.address, connector)
-        gp = Gamepad(gpc.address)
-        ret.append()
+        gp = Gamepad(connection)
+        ret.append(gp)
     
     return ret
  
