@@ -2,7 +2,7 @@ import smbus
 
 class Connection():
     def write(self, register: int, data: list):
-        self.bus.write_i2c_block_data(self.address, register, data)
+        pass
 
 class I2CConnector():
     def __init__(self, deviceBus: int):
@@ -17,4 +17,4 @@ class I2CConnection(Connection):
         self.connector = connector
     
     def write(self, register: int, data: list):
-        self.bus.write_i2c_block_data(self.address, register, data)
+        self.connector.write(self.address, register, data)
