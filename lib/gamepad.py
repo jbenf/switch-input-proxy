@@ -88,6 +88,7 @@ def handleHat(self, mask: int, state: int):
     
     bitmap = hat_map.get(self.bitmap_HAT, hat_values.CENTER)
 
+    print(self.bitmap_HAT, bitmap)
     if bitmap == hat_values.CENTER:
         self.bitmap_HAT = 0
 
@@ -97,7 +98,7 @@ def handleHat(self, mask: int, state: int):
 class Gamepad():
     bitmap_BTN_0 = 0x00    # Buttons such as Minus, Home and Capture
     bitmap_BTN_1 = 0x00    # Buttons such as A, B, X, Y
-    bitmap_HAT   = 0
+    bitmap_HAT   = 0x00
     bitmap_LX    = analog_values.CENTER
     bitmap_LY    = analog_values.CENTER
     bitmap_RX    = analog_values.CENTER
