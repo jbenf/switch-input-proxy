@@ -130,11 +130,11 @@ class Gamepad():
         'LCLICK': lambda self, state: handleBtn0(self, btn_0_mask.LCLICK, state),
         'RCLICK': lambda self, state: handleBtn0(self, btn_0_mask.RCLICK, state),
         'CAPTURE': lambda self, state: handleBtn0(self, btn_0_mask.CAPTURE, state),
-        'DPAD_UP': lambda self, state: handleBtn0(self, hat_mask.DPAD_UP, state),
-        'DPAD_RIGHT': lambda self, state: handleBtn0(self, hat_mask.DPAD_RIGHT, state),
-        'DPAD_DOWN': lambda self, state: handleBtn0(self, hat_mask.DPAD_DOWN, state),
-        'DPAD_LEFT': lambda self, state: handleBtn0(self, hat_mask.DPAD_LEFT, state),
-        'DPAD_X0': lambda self, state: handleBtn0(self, hat_mask.DPAD_X0, state),
-        'DPAD_Y0': lambda self, state: handleBtn0(self, hat_mask.DPAD_Y0, state),
+        'DPAD_UP': lambda self, state: handleHat(self, hat_mask.DPAD_UP, state),
+        'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
+        'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
+        'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
+        'DPAD_X0': lambda self, state: handleHat(self, hat_mask.DPAD_X0, state),
+        'DPAD_Y0': lambda self, state: handleHat(self, hat_mask.DPAD_Y0, state),
     }
     
