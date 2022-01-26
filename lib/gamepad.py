@@ -21,7 +21,7 @@ class Registers(NamedTuple):
     RX    = 0x5
     RY    = 0x6
 
-BTN_O_BITS = {
+BTN_O_MASK = {
     'MINUS'  : 2**0,
     'PLUS'   : 2**1,
     'LCLICK' : 2**2,
@@ -30,7 +30,7 @@ BTN_O_BITS = {
     'CAPTURE': 2**5,
 }
 
-class Btn_0_Bits(NamedTuple):
+class Btn_0_mask(NamedTuple):
     MINUS   = 2**0
     PLUS    = 2**1
     LCLICK  = 2**2
@@ -38,7 +38,7 @@ class Btn_0_Bits(NamedTuple):
     HOME    = 2**4
     CAPTURE = 2**5
 
-BTN_1_BITS = {
+BTN_1_MASK = {
     'Y' : 2**0,
     'B' : 2**1,
     'A' : 2**2,
@@ -49,7 +49,7 @@ BTN_1_BITS = {
     'ZR': 2**7,
 }
 
-class Btn_1_Bits(NamedTuple):
+class btn_1_mask(NamedTuple):
     Y  = 2**0
     B  = 2**1
     A  = 2**2
@@ -85,6 +85,14 @@ class Hat_Values(NamedTuple):
 class Analog_Values(NamedTuple):
     CENTER     = 0x80
 
+def handleBtn1(self, mask: int, state: int):
+    if state == 1:
+        self.bitmap_BTN_1 = self.bitmap_BTN_1 | mask
+    else:
+        self.bitmap_BTN_1 = self.bitmap_BTN_1 ^ mask
+    
+    self.connection.write(Registers.BTN_1, [self.bitmap_BTN_1])
+    
 
 class Gamepad():
     bitmap_BTN_0 = 0x00    # Buttons such as Minus, Home and Capture
@@ -95,9 +103,26 @@ class Gamepad():
     bitmap_RX    = Analog_Values.CENTER
     bitmap_RY    = Analog_Values.CENTER
 
+    
+
     def __init__(self, connection: Connection):
         self.connection = connection
 
     def event(self, invoke: str, state: int):
-        pass
+        func = self.handling.get(invoke, None)
+        if func != None:
+            func(self, state)
+        else:
+            print('Unkown Event: ', invoke)
+    
+    handling = {
+        'A': lambda self, state: handleBtn1(self, btn_1_mask.A, state),
+        'B': lambda self, state: handleBtn1(self, btn_1_mask.B, state),
+        'X': lambda self, state: handleBtn1(self, btn_1_mask.X, state),
+        'Y': lambda self, state: handleBtn1(self, btn_1_mask.Y, state),
+        'L': lambda self, state: handleBtn1(self, btn_1_mask.L, state),
+        'R': lambda self, state: handleBtn1(self, btn_1_mask.R, state),
+        'ZL': lambda self, state: handleBtn1(self, btn_1_mask.ZL, state),
+        'ZR': lambda self, state: handleBtn1(self, btn_1_mask.ZR, state),
+    }
     

@@ -11,9 +11,9 @@ gamepads:
     - name: usb gamepad
       bindings:
       - event: BTN_TOP2
-        invoke: L1
+        invoke: L
       - event: BTN_PINKIE
-        invoke: R1
+        invoke: R
       - event: BTN_THUMB
         invoke: A
       - event: BTN_THUMB2
