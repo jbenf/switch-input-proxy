@@ -12,7 +12,8 @@ import os
 import argparse
 import glob
 import yaml
-
+from lib.gamepad import Gamepad
+from lib.connection import I2CConnector, I2CConnection
 
 class Device(NamedTuple):
     index: int
@@ -139,16 +140,27 @@ def loadConfig(path):
     with open(path, "r") as stream:
         try:
             c = yaml.safe_load(stream)
-            deviceIndices = {}
             return c
         except yaml.YAMLError as exc:
             print(exc)
             os._exit(1)
+
+def initializeControllers():
+    ret = []
+    connector = I2CConnector(config.i2c_device)
+    for gpc in config.gamepads:
+        connection = I2CConnection(gpc.address, connector)
+        gp = Gamepad(gpc.address)
+        ret.append()
+    
+    return ret
  
-def loop():
+def main():
     queue = Queue(5000)
     relQueue = Queue(5000)
     scheduler = sched.scheduler(time.time, time.sleep)
+    controllers = initializeControllers(config)
+    
 
     if VERBOSE:
         print(config)
@@ -242,4 +254,4 @@ else:
             deviceIndices = {}
             config = loadConfig(configFiles[0])
             configIndex = 0
-            loop()
+            main()

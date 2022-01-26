@@ -1,11 +1,12 @@
 name: Default
+i2c_device: 1
 devices:
-- name: HORI CO.,LTD. HORIPAD S 
-- name: usb gamepad
+- name: HORI CO.,LTD. POKKEN CONTROLLER 
+#- name: usb gamepad
 # - name: SINOWEALTH Wired Gaming Mouse
 gamepads:
   - name: Pro Controller
-    target: /dev/uart1
+    address: 0x51
     devices:
     - name: usb gamepad
       bindings:
