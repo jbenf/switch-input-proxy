@@ -86,9 +86,9 @@ def handleHat(self, mask: int, state: int):
     
     bitmap = hat_map.get(self.bitmap_HAT, hat_values.CENTER)
 
-    print(self.bitmap_HAT, bitmap)
-    if bitmap == hat_values.CENTER:
-        self.bitmap_HAT = 0
+    print(self.bitmap_HAT, bitmap, mask)
+    # if bitmap == hat_values.CENTER:
+    #     self.bitmap_HAT = 0
 
     self.connection.write(Registers.HAT, [bitmap])
     
