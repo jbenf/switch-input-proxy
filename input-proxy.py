@@ -107,9 +107,9 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
             relInputEvent = ev
             
             if ev.ev.code == 'REL_X':
-                absXY[0] += ev.ev.state
+                absXY[0] += ev.ev.state*4
             elif ev.ev.code == 'REL_Y':
-                absXY[1] += ev.ev.state
+                absXY[1] += ev.ev.state*4
 
     absXY[0] = min(255, max(0, absXY[0]))
     absXY[1] = min(255, max(0, absXY[1]))
