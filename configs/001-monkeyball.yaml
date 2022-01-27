@@ -1,0 +1,63 @@
+name: Default
+i2c_device: 1
+Analog:
+  MULT_X: 8.0
+  MULT_Y: 8.0
+  INVERT_X: false
+  INVERT_Y: false
+  RELATIVE: true
+
+devices:
+#- name: HORI CO.,LTD. POKKEN CONTROLLER 
+# - name: usb gamepad
+# - name: SINOWEALTH Wired Gaming Mouse
+  - name: HID 0838:8918
+    index: 0
+  - name: HID 0838:8918
+    index: 1
+  - name: HID 0838:8918
+    index: 2
+gamepads:
+  - name: Pro Controller
+    address: 0x51
+    devices:
+    - name: HID 0838:8918
+      index: 1
+      bindings:
+      - event: BTN_Z
+        invoke: L
+      - event: BTN_TR
+        invoke: R
+      - event: BTN_EAST
+        invoke: A
+      - event: BTN_C
+        invoke: B
+      - event: BTN_NORTH
+        invoke: Y
+      - event: BTN_SOUTH
+        invoke: X
+      - event: BTN_BASE4
+        invoke: PLUS
+      - event: BTN_BASE3
+        invoke: MINUS
+      - event: ABS_HAT0X
+        state: -1
+        invoke: DPAD_LEFT
+      - event: ABS_HAT0X
+        state: 1
+        invoke: DPAD_RIGHT
+      - event: ABS_HAT0Y
+        state: -1
+        invoke: DPAD_UP
+      - event: ABS_HAT0Y
+        state: 1
+        invoke: DPAD_DOWN
+
+    - name: HID 0838:8918
+      index: 0
+      bindings:
+      - event: ABS_X
+        invoke: LX
+      - event: ABS_Y
+        invoke: LY
+    
