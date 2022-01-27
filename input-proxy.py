@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime
+from json.encoder import INFINITY
 from re import VERBOSE
 from threading import Thread
 from queue import Queue
@@ -55,12 +56,10 @@ def consumer(queue, bindings: dict):
         ev = queue.get()
         try:
             codeBindings = bindings[ev.ev.device.name][ev.index].get(ev.ev.code, None)
-            if VERBOSE:
-                print('Bindings found: ', codeBindings)
             if codeBindings == None:
                 continue
             for binding in codeBindings:
-                if binding[2] == -1:
+                if binding[2] == INFINITY:
                     binding[0].event(binding[1], ev.ev.state)
                 elif binding[2] == ev.ev.state:
                     binding[0].event(binding[1], 1)
@@ -180,7 +179,7 @@ def initializeBindings(gamepads: dict):
                     for b in gpc_device.get('bindings'):
                         event = b.get('event')
                         invoke = b.get('invoke')
-                        state = b.get('state', -1)
+                        state = b.get('state', INFINITY)
 
                         bindingArray = eventDict.get(event, [])
                         eventDict[event] = bindingArray
