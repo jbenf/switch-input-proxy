@@ -46,10 +46,11 @@ gamepads:
         state: 1
         invoke: DPAD_DOWN
 
-    - name: SINOWEALTH Wired Gaming Mouse
+    - name: HID 0838:8918
+      index: 0
       bindings:
       - event: ABS_X
-        invoke: ANALOG_L_X
+        invoke: LX
       - event: ABS_Y
-        invoke: ANALOG_L_Y
+        invoke: LY
     
