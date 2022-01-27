@@ -15,7 +15,7 @@ gamepads:
     address: 0x51
     devices:
     - name: HID 0838:8918
-      index: 0
+      index: 1
       bindings:
       - event: BTN_Z
         invoke: L
