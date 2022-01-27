@@ -143,9 +143,9 @@ class Gamepad():
         'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
         'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
         'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
-        'LX': lambda self, state: setLX(state),
-        'LY': lambda self, state: setLY(state),
-        'RX': lambda self, state: setRX(state),
-        'RY': lambda self, state: setRY(state),
+        'LX': lambda self, state: setLX(self, state),
+        'LY': lambda self, state: setLY(self, state),
+        'RX': lambda self, state: setRX(self, state),
+        'RY': lambda self, state: setRY(self, state),
     }
     
