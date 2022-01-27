@@ -90,21 +90,25 @@ def handleHat(self, mask: int, state: int):
 
     self.connection.write(Registers.HAT, [bitmap])
 
-def setLX(self, state: int):
-    self.bitmap_LX = state
-    self.connection.write(Registers.LX, [self.bitmap_LX])
+# def setLX(self, state: int):
+#     self.bitmap_LX = state
+#     self.connection.write(Registers.LX, [self.bitmap_LX])
 
-def setLY(self, state: int):
-    self.bitmap_LY = state
-    self.connection.write(Registers.LY, [self.bitmap_LY])
+# def setLY(self, state: int):
+#     self.bitmap_LY = state
+#     self.connection.write(Registers.LY, [self.bitmap_LY])
 
-def setRX(self, state: int):
-    self.bitmap_RX = state
-    self.connection.write(Registers.RX, [self.bitmap_RX])
+# def setRX(self, state: int):
+#     self.bitmap_RX = state
+#     self.connection.write(Registers.RX, [self.bitmap_RX])
 
-def setRY(self, state: int):
-    self.bitmap_RY = state
-    self.connection.write(Registers.RY, [self.bitmap_RY])
+# def setRY(self, state: int):
+#     self.bitmap_RY = state
+#     self.connection.write(Registers.RY, [self.bitmap_RY])
+
+def setAbsoluteAnalog(self, register: int, state: int):
+    self.connection.write(register, [state])
+    print('AbsRL', register, state)
     
 
 class Gamepad():
@@ -147,9 +151,9 @@ class Gamepad():
         'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
         'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
         'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
-        'LX': lambda self, state: setLX(self, state),
-        'LY': lambda self, state: setLY(self, state),
-        'RX': lambda self, state: setRX(self, state),
-        'RY': lambda self, state: setRY(self, state),
+        'LX': lambda self, state: setAbsoluteAnalog(self, Registers.LX, state),
+        'LY': lambda self, state: setAbsoluteAnalog(self, Registers.LY, state),
+        'RX': lambda self, state: setAbsoluteAnalog(self, Registers.RX, state),
+        'RY': lambda self, state: setAbsoluteAnalog(self, Registers.RY, state),
     }
     
