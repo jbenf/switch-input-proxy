@@ -36,10 +36,12 @@ gamepads:
         invoke: Y
       - event: BTN_SOUTH
         invoke: X
-      - event: BTN_BASE4
+      - event: BTN_TR2
         invoke: PLUS
-      - event: BTN_BASE3
+      - event: BTN_TL
         invoke: MINUS
+      - event: BTN_MODE
+        invoke: HOME
       - event: ABS_HAT0X
         state: -1
         invoke: DPAD_LEFT
