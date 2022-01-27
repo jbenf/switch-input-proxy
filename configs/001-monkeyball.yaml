@@ -1,11 +1,7 @@
 name: Default
 i2c_device: 1
 Analog:
-  MULT_X: 8.0
-  MULT_Y: 8.0
-  INVERT_X: false
-  INVERT_Y: false
-  RELATIVE: true
+  MULT: 4.0
 
 devices:
 #- name: HORI CO.,LTD. POKKEN CONTROLLER 
