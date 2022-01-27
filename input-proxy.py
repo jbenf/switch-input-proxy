@@ -36,7 +36,7 @@ def producer(queue, relQueue, name: str, index: int):
                     events = device.read()
                     for event in events:
                         if args.benchmark or VERBOSE:
-                            print(datetime.datetime.now(), 'SRC: ', event.device.name, index, event.code, event.state)
+                            print(datetime.datetime.now(), 'SRC: ', event.device.name, index, event.ev_type, event.code, event.state)
                         if event.ev_type == 'Absolute' or event.ev_type == 'Key':
                             queue.put(Event(index, event))
                         elif event.ev_type == 'Relative':
