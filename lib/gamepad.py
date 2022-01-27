@@ -92,15 +92,19 @@ def handleHat(self, mask: int, state: int):
 
 def setLX(self, state: int):
     self.bitmap_LX = state
+    self.connection.write(Registers.LX, [self.bitmap_LX])
 
 def setLY(self, state: int):
     self.bitmap_LY = state
+    self.connection.write(Registers.LY, [self.bitmap_LY])
 
 def setRX(self, state: int):
     self.bitmap_RX = state
+    self.connection.write(Registers.RX, [self.bitmap_RX])
 
 def setRY(self, state: int):
     self.bitmap_RY = state
+    self.connection.write(Registers.RY, [self.bitmap_RY])
     
 
 class Gamepad():
