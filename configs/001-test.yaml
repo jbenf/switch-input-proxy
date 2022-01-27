@@ -14,19 +14,20 @@ gamepads:
   - name: Pro Controller
     address: 0x51
     devices:
-    - name: usb gamepad
+    - name: HID 0838:8918
+      index: 0
       bindings:
       - event: BTN_TOP2
         invoke: L
       - event: BTN_PINKIE
         invoke: R
-      - event: BTN_THUMB
+      - event: BTN_EAST
         invoke: A
-      - event: BTN_THUMB2
+      - event: BTN_C
         invoke: B
-      - event: BTN_TOP
+      - event: BTN_NORTH
         invoke: Y
-      - event: BTN_TRIGGER
+      - event: BTN_SOUTH
         invoke: X
       - event: BTN_BASE4
         invoke: PLUS
