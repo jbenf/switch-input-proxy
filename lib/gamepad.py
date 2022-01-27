@@ -107,8 +107,8 @@ def handleHat(self, mask: int, state: int):
 #     self.connection.write(Registers.RY, [self.bitmap_RY])
 
 def setAbsoluteAnalog(self, register: int, state: int):
-    self.connection.write(register, [state])
     print('AbsRL', register, state)
+    self.connection.write(register, [state])
     
 
 class Gamepad():
