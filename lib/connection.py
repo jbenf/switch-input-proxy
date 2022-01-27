@@ -11,7 +11,7 @@ class I2CConnector():
         self.initializeBus()
     
     def initializeBus(self):
-        self.bus = smbus.SMBus(self.deviceBus)
+        self.bus = smbus.SMBus(self.device)
     
     def write(self, addr: int, register: int, data: list):
         try:
