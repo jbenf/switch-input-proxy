@@ -228,7 +228,7 @@ def main():
     consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
     if analogConfig.RELATIVE:
-        scheduler.enter(0.01667, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
+        scheduler.enter(0.03, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
     
     if VERBOSE:
         print('starting producers')
