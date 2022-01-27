@@ -55,6 +55,8 @@ def consumer(queue, bindings: dict):
         ev = queue.get()
         try:
             codeBindings = bindings[ev.ev.device.name][ev.index].get(ev.ev.code, None)
+            if VERBOSE:
+                print('Bindings found: ', codeBindings)
             if codeBindings == None:
                 continue
             for binding in codeBindings:
