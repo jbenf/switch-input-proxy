@@ -5,7 +5,7 @@ Analog:
   MULT_Y: 8.0
   INVERT_X: false
   INVERT_Y: false
-  RELATIVE: false
+  RELATIVE: true
 
 devices:
 #- name: HORI CO.,LTD. POKKEN CONTROLLER 
@@ -27,7 +27,7 @@ gamepads:
       - event: BTN_Z
         invoke: L
       - event: BTN_TR
-        invoke: RESET_ANALOG
+        invoke: R
       - event: BTN_EAST
         invoke: A
       - event: BTN_C
@@ -58,8 +58,8 @@ gamepads:
     - name: HID 0838:8918
       index: 0
       bindings:
-      - event: REL_X
-        invoke: LX_REL
-      - event: REL_Y
-        invoke: LY_REL
+      - event: ABS_X
+        invoke: LX
+      - event: ABS_Y
+        invoke: LY
     
