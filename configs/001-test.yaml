@@ -17,9 +17,9 @@ gamepads:
     - name: HID 0838:8918
       index: 0
       bindings:
-      - event: BTN_TOP2
+      - event: BTN_Z
         invoke: L
-      - event: BTN_PINKIE
+      - event: BTN_TR
         invoke: R
       - event: BTN_EAST
         invoke: A
@@ -33,17 +33,17 @@ gamepads:
         invoke: PLUS
       - event: BTN_BASE3
         invoke: MINUS
-      - event: ABS_X
-        state: 0
+      - event: ABS_HAT0X
+        state: -1
         invoke: DPAD_LEFT
-      - event: ABS_X
-        state: 255
+      - event: ABS_HAT0X
+        state: 1
         invoke: DPAD_RIGHT
-      - event: ABS_Y
-        state: 0
+      - event: ABS_HAT0Y
+        state: -1
         invoke: DPAD_UP
-      - event: ABS_Y
-        state: 255
+      - event: ABS_HAT0Y
+        state: 1
         invoke: DPAD_DOWN
 
     - name: SINOWEALTH Wired Gaming Mouse
