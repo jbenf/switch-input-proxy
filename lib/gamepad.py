@@ -1,4 +1,3 @@
-from re import VERBOSE
 from typing import NamedTuple
 from lib.connection import Connection
 
