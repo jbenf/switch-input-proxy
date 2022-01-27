@@ -66,7 +66,7 @@ def handleBtn0(self, mask: int, state: int):
     if state == 1:
         self.bitmap_BTN_0 = self.bitmap_BTN_0 | mask
     else:
-        self.bitmap_BTN_0 = self.bitmap_BTN_0 ^ mask
+        self.bitmap_BTN_0 = self.bitmap_BTN_0 & ~ mask
     
     self.connection.write(Registers.BTN_0, [self.bitmap_BTN_0])
 
@@ -74,7 +74,7 @@ def handleBtn1(self, mask: int, state: int):
     if state == 1:
         self.bitmap_BTN_1 = self.bitmap_BTN_1 | mask
     else:
-        self.bitmap_BTN_1 = self.bitmap_BTN_1 ^ mask
+        self.bitmap_BTN_1 = self.bitmap_BTN_1 & ~ mask
     
     self.connection.write(Registers.BTN_1, [self.bitmap_BTN_1])
 
@@ -82,13 +82,12 @@ def handleHat(self, mask: int, state: int):
     if state == 1:
         self.bitmap_HAT = self.bitmap_HAT | mask
     else:
-        self.bitmap_HAT = self.bitmap_HAT ^ mask
+        self.bitmap_HAT = self.bitmap_HAT & ~mask
     
     bitmap = hat_map.get(self.bitmap_HAT, hat_values.CENTER)
 
-    print(self.bitmap_HAT, bitmap, mask)
-    # if bitmap == hat_values.CENTER:
-    #     self.bitmap_HAT = 0
+    if bitmap == hat_values.CENTER:
+        self.bitmap_HAT = 0
 
     self.connection.write(Registers.HAT, [bitmap])
     
