@@ -6,10 +6,19 @@ class Connection():
 
 class I2CConnector():
     def __init__(self, deviceBus: int):
-        self.bus = smbus.SMBus(deviceBus)
+        self.device = deviceBus
+        self.bus = None
+        self.initializeBus()
+    
+    def initializeBus(self):
+        self.bus = smbus.SMBus(self.deviceBus)
     
     def write(self, addr: int, register: int, data: list):
-        self.bus.write_i2c_block_data(addr, register, data)
+        try:
+            self.bus.write_i2c_block_data(addr, register, data)
+        except IOError:
+            self.initializeBus()
+
 
 class I2CConnection(Connection):
     def __init__(self, address: int, connector: I2CConnector):

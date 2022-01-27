@@ -69,20 +69,6 @@ def consumer(queue, bindings: dict):
             print('Error: ', err)
             raise err
 
-        # for gp in config.get('gamepads'):
-        #     for d in gp.get('devices'):
-        #         deviceIndex = d.get('index', 0)
-        #         deviceName = d.get('name')
-        #         for b in d.get('bindings'):
-        #             if b.get('event') == ev.ev.code and ev.ev.device.name == deviceName and ev.index == deviceIndex:
-        #                 bState = b.get('state', -1)
-        #                 if bState > -1:
-        #                     if bState == ev.ev.state:
-        #                         print(gp.get('name'), b.get('invoke'), 1)
-        #                     else:
-        #                         print(gp.get('name'), b.get('invoke'), 0)
-        #                 else:
-        #                     print(gp.get('name'), b.get('invoke'), ev.ev.state)
     
 def findDevice(name: str, aIndex: int):
     index = aIndex
@@ -277,7 +263,7 @@ parser.add_argument('-v',
 parser.add_argument('-b',
     '--benchmark',
     action='store_true',
-    help='Log the delta time between the last two events for benchmark reasons (configure a input proxy loop)')
+    help='Log the input events with timestamp')
 
 
 args = parser.parse_args()
