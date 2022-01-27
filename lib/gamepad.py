@@ -90,21 +90,33 @@ def handleHat(self, mask: int, state: int):
 
     self.connection.write(Registers.HAT, [bitmap])
 
-# def setLX(self, state: int):
-#     self.bitmap_LX = state
-#     self.connection.write(Registers.LX, [self.bitmap_LX])
+def setRelativeLX(self, state: int):
+    self.bitmap_LX = min(255, max(0, self.bitmap_LX + state))
+    self.connection.write(Registers.LX, [self.bitmap_LX])
 
-# def setLY(self, state: int):
-#     self.bitmap_LY = state
-#     self.connection.write(Registers.LY, [self.bitmap_LY])
+def setRelativeLY(self, state: int):
+    self.bitmap_LY = min(255, max(0, self.bitmap_LY + state))
+    self.connection.write(Registers.LY, [self.bitmap_LY])
 
-# def setRX(self, state: int):
-#     self.bitmap_RX = state
-#     self.connection.write(Registers.RX, [self.bitmap_RX])
+def setRelativeRX(self, state: int):
+    self.bitmap_RX = min(255, max(0, self.bitmap_RX + state))
+    self.connection.write(Registers.RX, [self.bitmap_RX])
 
-# def setRY(self, state: int):
-#     self.bitmap_RY = state
-#     self.connection.write(Registers.RY, [self.bitmap_RY])
+def setRelativeRY(self, state: int):
+    self.bitmap_RY = min(255, max(0, self.bitmap_RY + state))
+    self.connection.write(Registers.RY, [self.bitmap_RY])
+
+def resetAnalog(self):
+    self.bitmap_LX = analog_values.CENTER
+    self.bitmap_LY = analog_values.CENTER
+    self.bitmap_RX = analog_values.CENTER
+    self.bitmap_RY = analog_values.CENTER
+
+    self.connection.write(Registers.LX, [self.bitmap_LX])
+    self.connection.write(Registers.LY, [self.bitmap_LY])
+    self.connection.write(Registers.RX, [self.bitmap_RX])
+    self.connection.write(Registers.RY, [self.bitmap_RY])
+
 
 def setAbsoluteAnalog(self, register: int, state: int):
     self.connection.write(register, [state])
@@ -154,5 +166,10 @@ class Gamepad():
         'LY': lambda self, state: setAbsoluteAnalog(self, Registers.LY, state),
         'RX': lambda self, state: setAbsoluteAnalog(self, Registers.RX, state),
         'RY': lambda self, state: setAbsoluteAnalog(self, Registers.RY, state),
+        'LX_REL': lambda self, state: setRelativeLX(self, state),
+        'LY_REL': lambda self, state: setRelativeLY(self, state),
+        'RX_REL': lambda self, state: setRelativeRX(self, state),
+        'RY_REL': lambda self, state: setRelativeRY(self, state),
+        'RESET_ANALOG': lambda self, state: resetAnalog(self),
     }
     

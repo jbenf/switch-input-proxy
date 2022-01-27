@@ -52,7 +52,7 @@ def producer(queue, relQueue, name: str, index: int):
                     for event in events:
                         if args.benchmark or VERBOSE:
                             print(datetime.datetime.now(), 'SRC: ', event.device.name, index, event.ev_type, event.code, event.state)
-                        if event.ev_type == 'Absolute' or event.ev_type == 'Key':
+                        if event.ev_type == 'Absolute' or event.ev_type == 'Key' or (not analogConfig.RELATIVE and event.ev_type == 'Relative'):
                             queue.put(Event(index, event))
                         elif event.ev_type == 'Relative':
                             relQueue.put(Event(index, event))
@@ -227,7 +227,8 @@ def main():
     
     consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
-    scheduler.enter(0.01667, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
+    if analogConfig.RELATIVE:
+        scheduler.enter(0.01667, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
     
     if VERBOSE:
         print('starting producers')
