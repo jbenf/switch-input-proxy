@@ -2,8 +2,14 @@ name: Default
 i2c_device: 1
 devices:
 #- name: HORI CO.,LTD. POKKEN CONTROLLER 
-- name: usb gamepad
+# - name: usb gamepad
 # - name: SINOWEALTH Wired Gaming Mouse
+  - name: HID 0838:8918
+    index: 0
+  - name: HID 0838:8918
+    index: 1
+  - name: HID 0838:8918
+    index: 2
 gamepads:
   - name: Pro Controller
     address: 0x51
