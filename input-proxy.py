@@ -25,7 +25,7 @@ class Event(NamedTuple):
     index: int
     ev: InputEvent
 
-class AnalogConfig(NamedTuple):
+class AnalogConfig():
     MULT_X: float
     MULT_Y: float
     INVERT_X: bool
