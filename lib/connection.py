@@ -17,6 +17,7 @@ class I2CConnector():
         try:
             self.bus.write_i2c_block_data(addr, register, data)
         except IOError:
+            print('i2c error', addr)
             self.initializeBus()
 
 
