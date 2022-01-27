@@ -107,7 +107,6 @@ class Gamepad():
         self.connection = connection
 
     def event(self, invoke: str, state: int):
-        print(invoke, state)
         func = self.handling.get(invoke, None)
         if func != None:
             func(self, state)
