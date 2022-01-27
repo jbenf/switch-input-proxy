@@ -126,8 +126,8 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
             elif ev.ev.code == 'REL_Y':
                 absXY[1] += ev.ev.state * analogConfig.MULT_Y
 
-    absXY[0] = min(255, max(0, absXY[0]))
-    absXY[1] = min(255, max(0, absXY[1]))
+    absXY[0] = min(255, max(0, int(absXY[0])))
+    absXY[1] = min(255, max(0, int(absXY[1])))
 
     if relInputEvent != None and ((not resting) or queueIt):
         eventinfoX = {

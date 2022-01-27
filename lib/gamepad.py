@@ -107,7 +107,6 @@ def handleHat(self, mask: int, state: int):
 #     self.connection.write(Registers.RY, [self.bitmap_RY])
 
 def setAbsoluteAnalog(self, register: int, state: int):
-    print('AbsRL', register, state)
     self.connection.write(register, [state])
     
 
