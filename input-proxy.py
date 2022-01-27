@@ -210,7 +210,7 @@ def main():
     
     consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
-    scheduler.enter(0.05, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
+    scheduler.enter(0.01667, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
     
     if VERBOSE:
         print('starting producers')
