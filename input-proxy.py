@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime
 from re import VERBOSE
 from threading import Thread
 from queue import Queue
@@ -27,6 +28,7 @@ class Event(NamedTuple):
 def producer(queue, relQueue, name: str, index: int):
     if VERBOSE:
         print('Starting Producer ', name, index)
+    lasttime = None
     while True:
         try:
             device = findDevice(name, index)
@@ -34,6 +36,11 @@ def producer(queue, relQueue, name: str, index: int):
                 try:
                     events = device.read()
                     for event in events:
+                        if args.benchmark:
+                            newtime = datetime.datetime.now()
+                            if lasttime != None:
+                                print(newtime - lasttime)
+                            lasttime = newtime
                         if VERBOSE:
                             print('SRC: ', event.device.name, event.code, event.state)
                         if event.ev_type == 'Absolute' or event.ev_type == 'Key':
@@ -272,6 +279,11 @@ parser.add_argument('-v',
     '--verbose',
     action='store_true',
     help='Verbose Logging enabled')
+
+parser.add_argument('-b',
+    '--benchmark',
+    action='store_true',
+    help='Log the delta time between the last two events for benchmark reasons (configure a input proxy loop)')
 
 
 args = parser.parse_args()
