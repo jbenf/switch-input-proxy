@@ -89,6 +89,18 @@ def handleHat(self, mask: int, state: int):
         self.bitmap_HAT = 0
 
     self.connection.write(Registers.HAT, [bitmap])
+
+def setLX(self, state: int):
+    self.bitmap_LX = state
+
+def setLY(self, state: int):
+    self.bitmap_LY = state
+
+def setRX(self, state: int):
+    self.bitmap_RX = state
+
+def setRY(self, state: int):
+    self.bitmap_RY = state
     
 
 class Gamepad():
@@ -131,5 +143,9 @@ class Gamepad():
         'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
         'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
         'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
+        'LX': lambda self, state: setLX(state),
+        'LY': lambda self, state: setLY(state),
+        'RX': lambda self, state: setRX(state),
+        'RY': lambda self, state: setRY(state),
     }
     
