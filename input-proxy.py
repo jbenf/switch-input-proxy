@@ -25,6 +25,20 @@ class Event(NamedTuple):
     index: int
     ev: InputEvent
 
+class AnalogConfig(NamedTuple):
+    MULT_X: float
+    MULT_Y: float
+    INVERT_X: bool
+    INVERT_Y: bool
+    RELATIVE: bool
+
+    def __init__(self, cfg: dict):
+        self.MULT_X = cfg.get('MULT_X', cfg.get('MULT', 4.0))
+        self.MULT_Y = cfg.get('MULT_Y', cfg.get('MULT', 4.0))
+        self.INVERT_X = cfg.get('INVERT_X', False)
+        self.INVERT_Y = cfg.get('INVERT_Y', False)
+        self.RELATIVE = cfg.get('RELATIVE', True)
+
  
 def producer(queue, relQueue, name: str, index: int):
     if VERBOSE:
@@ -88,6 +102,7 @@ def findDevice(name: str, aIndex: int):
 
 global relInputEvent
 relInputEvent = None
+analogConfig: AnalogConfig = None
 
 def handleRelativeInput(queue, relQueue, scheduler, resting=False):
     absXY = [127, 127]
@@ -107,9 +122,9 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
             relInputEvent = ev
             
             if ev.ev.code == 'REL_X':
-                absXY[0] += ev.ev.state*4
+                absXY[0] += ev.ev.state * analogConfig.MULT_X
             elif ev.ev.code == 'REL_Y':
-                absXY[1] += ev.ev.state*4
+                absXY[1] += ev.ev.state * analogConfig.MULT_Y
 
     absXY[0] = min(255, max(0, absXY[0]))
     absXY[1] = min(255, max(0, absXY[1]))
@@ -144,6 +159,7 @@ def loadConfig(path):
     with open(path, "r") as stream:
         try:
             c = yaml.safe_load(stream)
+            analogConfig = AnalogConfig(c.get('Analog'), {})
             return c
         except yaml.YAMLError as exc:
             print(exc)
