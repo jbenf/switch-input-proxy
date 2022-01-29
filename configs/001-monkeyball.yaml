@@ -25,9 +25,9 @@ gamepads:
       - event: BTN_TR
         invoke: R
       - event: BTN_THUMBL
-        invoke: L
+        invoke: ZR
       - event: BTN_THUMBR
-        invoke: R
+        invoke: ZL
       - event: BTN_EAST
         invoke: A
       - event: BTN_C
