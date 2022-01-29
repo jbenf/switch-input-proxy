@@ -114,7 +114,7 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
         if not resting:
             resting = True
             queueIt = True
-        elif absXY != [127, 127]:
+        elif absXY[0] != 127 or abs[1] != 127:
             absXY = [127,127]
     else:
         resting = False
