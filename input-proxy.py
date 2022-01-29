@@ -100,12 +100,13 @@ def findDevice(name: str, aIndex: int):
         print(devices.all_devices)
     raise NameError('Device not found:', name, aIndex)
 
-global relInputEvent
 relInputEvent = None
 analogConfig: AnalogConfig = None
+absXY = [127, 127]
 
 def handleRelativeInput(queue, relQueue, scheduler, resting=False):
-    absXY = [127, 127]
+    global absXY
+    absXY = [(x+127)/2 for x in absXY]
     global relInputEvent
     queueIt = False
 

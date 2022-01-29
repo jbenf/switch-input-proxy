@@ -1,7 +1,7 @@
 name: Default
 i2c_device: 1
 Analog:
-  MULT: 4.0
+  MULT: 1.0
 
 devices:
 #- name: HORI CO.,LTD. POKKEN CONTROLLER 
