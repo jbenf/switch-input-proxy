@@ -106,7 +106,7 @@ absXY = [127, 127]
 
 def handleRelativeInput(queue, relQueue, scheduler, resting=False):
     global absXY
-    absXY = [(x+127)/2 for x in absXY]
+    absXY = [(2*x+127)/3 for x in absXY]
     global relInputEvent
     queueIt = False
 
