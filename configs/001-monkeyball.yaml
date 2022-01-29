@@ -21,13 +21,13 @@ gamepads:
       index: 1
       bindings:
       - event: BTN_Z
-        invoke: L
-      - event: BTN_TR
         invoke: R
-      - event: BTN_THUMBL
+      - event: BTN_TR
         invoke: ZR
-      - event: BTN_THUMBR
+      - event: BTN_THUMBL
         invoke: ZL
+      - event: BTN_THUMBR
+        invoke: L
       - event: BTN_EAST
         invoke: A
       - event: BTN_C
