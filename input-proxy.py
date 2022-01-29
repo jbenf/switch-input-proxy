@@ -111,6 +111,7 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
     queueIt = False
 
     if relQueue.empty():
+        print('absXY', absXY)
         if not resting:
             resting = True
             queueIt = True
