@@ -114,6 +114,8 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
         if not resting:
             resting = True
             queueIt = True
+        elif absXY != [127, 127]:
+            absXY = [127,127]
     else:
         resting = False
 
@@ -146,7 +148,8 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
         queue.put(Event(relInputEvent.index, InputEvent(relInputEvent.ev.device, eventinfoX)))
         queue.put(Event(relInputEvent.index, InputEvent(relInputEvent.ev.device, eventinfoY)))
         #print(absXY)
-    scheduler.enter(0.05, 1, handleRelativeInput, (queue, relQueue, scheduler, resting, ))
+    
+    scheduler.enter(0.06, 1, handleRelativeInput, (queue, relQueue, scheduler, resting, ))
 
 def listDevices():
     print('Available Devices: \n')
@@ -229,7 +232,7 @@ def main():
     consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
     if analogConfig.RELATIVE:
-        scheduler.enter(0.03, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
+        scheduler.enter(0.06, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
     
     if VERBOSE:
         print('starting producers')
