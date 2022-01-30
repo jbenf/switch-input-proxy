@@ -88,7 +88,7 @@ def consumer(queue, bindings: dict):
 def findDevice(name: str, aIndex: int):
     index = aIndex
     miceAndGamepads = devices.mice + devices.gamepads
-    sortedDevices = miceAndGamepads.sort(key=InputDevice.get_char_device_path)
+    sortedDevices = sorted(miceAndGamepads, key=InputDevice.get_char_device_path))
     for d in sortedDevices:
         if d.name == name:
             if index == 0:
