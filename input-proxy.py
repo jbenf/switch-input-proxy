@@ -87,7 +87,9 @@ def consumer(queue, bindings: dict):
     
 def findDevice(name: str, aIndex: int):
     index = aIndex
-    for d in devices.all_devices:
+    miceAndGamepads = devices.mice + devices.gamepads
+    sortedDevices = miceAndGamepads.sort(InputDevice.get_char_device_path)
+    for d in sortedDevices:
         if d.name == name:
             if index == 0:
                 if VERBOSE:
@@ -97,7 +99,7 @@ def findDevice(name: str, aIndex: int):
                 index -= 1
     if VERBOSE:
         print('Device not found:', name)
-        print(devices.all_devices)
+        print(sortedDevices)
     raise NameError('Device not found:', name, aIndex)
 
 relInputEvent = None
