@@ -1,0 +1,14 @@
+[Unit]
+Description=Input Proxy
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=pi
+ExecStart=/data/input-proxy/input-proxy.py -c /data/input-proxy/configs/
+
+[Install]
+WantedBy=multi-user.target
