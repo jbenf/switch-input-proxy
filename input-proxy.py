@@ -181,6 +181,10 @@ def initializeGamepads():
         gp = Gamepad(connection)
         ret[connection.address] = gp
     
+    displayConf = config.get('display', None)
+    if displayConf != None:
+        connector.writeByte(displayConf.get('addr'), displayConf.get('icon'))
+
     return ret
 
 def initializeBindings(gamepads: dict):

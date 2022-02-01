@@ -19,6 +19,13 @@ class I2CConnector():
         except IOError:
             print('i2c error', addr)
             self.initializeBus()
+    
+    def writeByte(self, addr: int, data: int):
+        try:
+            self.bus.write_byte(addr, data)
+        except IOError:
+            print('i2c error', addr)
+            self.initializeBus()
 
 
 class I2CConnection(Connection):
