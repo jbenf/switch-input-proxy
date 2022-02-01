@@ -1,8 +1,8 @@
 name: Default
 i2c_device: 1
-Analog:
+analog:
   MULT: 1.5
-Display:
+display:
   addr: 0x8
   icon: 0x3
 

@@ -167,7 +167,7 @@ def loadConfig(path):
         try:
             c = yaml.safe_load(stream)
             global analogConfig
-            analogConfig = AnalogConfig(c.get('Analog', {}))
+            analogConfig = AnalogConfig(c.get('analog', {}))
             return c
         except yaml.YAMLError as exc:
             print(exc)
