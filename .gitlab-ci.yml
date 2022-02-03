@@ -18,10 +18,14 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
+image: python:3.9.2
+
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
-  image: cytopia/pylint
+  allow_failure: true
+  before_script:
+    - pip install pylint
   script:
-    - input-proxy.py ./lib/*.py
+    - pylint input-proxy.py ./lib/*.py
 
