@@ -17,19 +17,22 @@ import yaml
 from lib.gamepad import Gamepad
 from lib.connection import I2CConnector, I2CConnection
 
+
 class Device(NamedTuple):
     index: int
     device: InputDevice
+
 
 class Event(NamedTuple):
     index: int
     ev: InputEvent
 
+
 class AnalogConfig():
     MULT_X: float
     MULT_Y: float
-    INVERT_X: bool
-    INVERT_Y: bool
+    INVERT_X: bool  # TODO: implement
+    INVERT_Y: bool  # TODO: implement
     RELATIVE: bool
 
     def __init__(self, cfg: dict):
@@ -39,7 +42,7 @@ class AnalogConfig():
         self.INVERT_Y = cfg.get('INVERT_Y', False)
         self.RELATIVE = cfg.get('RELATIVE', True)
 
- 
+
 def producer(queue, relQueue, name: str, index: int):
     if VERBOSE:
         print('Starting Producer ', name, index)
@@ -51,7 +54,8 @@ def producer(queue, relQueue, name: str, index: int):
                     events = device.read()
                     for event in events:
                         if args.benchmark or VERBOSE:
-                            print(datetime.datetime.now(), 'SRC: ', event.device.name, index, event.ev_type, event.code, event.state)
+                            print(datetime.datetime.now(), 'SRC: ', event.device.name,
+                                  index, event.ev_type, event.code, event.state)
                         if event.ev_type == 'Absolute' or event.ev_type == 'Key' or (not analogConfig.RELATIVE and event.ev_type == 'Relative'):
                             queue.put(Event(index, event))
                         elif event.ev_type == 'Relative':
@@ -63,13 +67,14 @@ def producer(queue, relQueue, name: str, index: int):
             print(err)
             print('reconnecting currently not possible, exiting')
             os._exit(0)
-        
- 
+
+
 def consumer(queue, bindings: dict):
     while True:
         ev = queue.get()
         try:
-            codeBindings = bindings[ev.ev.device.name][ev.index].get(ev.ev.code, None)
+            codeBindings = bindings[ev.ev.device.name][ev.index].get(
+                ev.ev.code, None)
             if codeBindings == None:
                 continue
             for binding in codeBindings:
@@ -79,16 +84,17 @@ def consumer(queue, bindings: dict):
                     binding[0].event(binding[1], 1)
                 else:
                     binding[0].event(binding[1], 0)
-                
+
         except Exception as err:
             print('Error: ', err)
             raise err
 
-    
+
 def findDevice(name: str, aIndex: int):
     index = aIndex
     miceAndGamepads = devices.mice + devices.gamepads
-    sortedDevices = sorted(miceAndGamepads, key=InputDevice.get_char_device_path)
+    sortedDevices = sorted(
+        miceAndGamepads, key=InputDevice.get_char_device_path)
     for d in sortedDevices:
         if d.name == name:
             if index == 0:
@@ -102,9 +108,11 @@ def findDevice(name: str, aIndex: int):
         print(sortedDevices)
     raise NameError('Device not found:', name, aIndex)
 
+
 relInputEvent = None
 analogConfig: AnalogConfig = None
 absXY = [127, 127]
+
 
 def handleRelativeInput(queue, relQueue, scheduler, resting=False):
     global absXY
@@ -117,16 +125,16 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
             resting = True
             queueIt = True
         elif absXY[0] != 127 or absXY[1] != 127:
-            absXY = [127,127]
+            absXY = [127, 127]
             queueIt = True
     else:
         resting = False
 
         while not relQueue.empty():
             ev = relQueue.get_nowait()
-            
+
             relInputEvent = ev
-            
+
             if ev.ev.code == 'REL_X':
                 absXY[0] += ev.ev.state * analogConfig.MULT_X
             elif ev.ev.code == 'REL_Y':
@@ -148,19 +156,25 @@ def handleRelativeInput(queue, relQueue, scheduler, resting=False):
             "timestamp": 0,
             "code": "ABS_Y"
         }
-        queue.put(Event(relInputEvent.index, InputEvent(relInputEvent.ev.device, eventinfoX)))
-        queue.put(Event(relInputEvent.index, InputEvent(relInputEvent.ev.device, eventinfoY)))
+        queue.put(Event(relInputEvent.index, InputEvent(
+            relInputEvent.ev.device, eventinfoX)))
+        queue.put(Event(relInputEvent.index, InputEvent(
+            relInputEvent.ev.device, eventinfoY)))
         #print(absXY)
-    
-    scheduler.enter(0.06, 1, handleRelativeInput, (queue, relQueue, scheduler, resting, ))
+
+    scheduler.enter(0.06, 1, handleRelativeInput,
+                    (queue, relQueue, scheduler, resting, ))
+
 
 def listDevices():
     print('Available Devices: \n')
     for d in devices.mice + devices.gamepads:
         print(d)
 
+
 def signal_handler(sig, frame):
     os._exit(0)
+
 
 def loadConfig(path):
     with open(path, "r") as stream:
@@ -173,23 +187,24 @@ def loadConfig(path):
             print(exc)
             os._exit(1)
 
-def initializeGamepads():
+
+def initializeOutputs():
     ret = {}
     connector = I2CConnector(config.get('i2c_device'))
     for gpc in config.get('gamepads'):
         connection = I2CConnection(gpc.get('address'), connector)
         gp = Gamepad(connection)
         ret[connection.address] = gp
-    
+
     displayConf = config.get('display', None)
     if displayConf != None:
         connector.writeByte(displayConf.get('addr'), displayConf.get('icon'))
 
     return ret
 
+
 def initializeBindings(gamepads: dict):
     nameDict = {}
-
 
     for d in config.get('devices'):
         n = d.get('name')
@@ -199,7 +214,7 @@ def initializeBindings(gamepads: dict):
         nameDict[n] = indexDict
         eventDict = indexDict.get(i, {})
         indexDict[i] = eventDict
-        
+
         for gpc in config.get('gamepads'):
             gamepad = gamepads[gpc.get('address')]
             for gpc_device in gpc.get('devices'):
@@ -213,15 +228,14 @@ def initializeBindings(gamepads: dict):
                         eventDict[event] = bindingArray
                         bindingArray.append((gamepad, invoke, state))
 
-
     return nameDict
 
- 
+
 def main():
     queue = Queue(5000)
     relQueue = Queue(5000)
     scheduler = sched.scheduler(time.time, time.sleep)
-    gamepads = initializeGamepads()
+    gamepads = initializeOutputs()
     bindings = initializeBindings(gamepads)
 
     if VERBOSE:
@@ -230,17 +244,18 @@ def main():
 
         print('Bindings: ')
         print(bindings)
- 
+
     # fire up the both producers and consumers
 
     producers = [Thread(target=producer, args=(queue, relQueue, d.get('name'), d.get('index', 0) | 0,))
                  for d in config.get('devices')]
-    
+
     consumers = [Thread(target=consumer, args=(queue, bindings, ))]
 
     if analogConfig.RELATIVE:
-        scheduler.enter(0.06, 1, handleRelativeInput, (queue, relQueue, scheduler, ))
-    
+        scheduler.enter(0.06, 1, handleRelativeInput,
+                        (queue, relQueue, scheduler, ))
+
     if VERBOSE:
         print('starting producers')
     for p in producers:
@@ -251,56 +266,54 @@ def main():
     for c in consumers:
         c.start()
 
-
     signal.signal(signal.SIGINT, signal_handler)
 
     scheduler.run()
-    
+
     if VERBOSE:
         print('joining producers')
     for p in producers:
         p.join()
- 
+
     # wait for the remaining tasks to be processed
     if VERBOSE:
         print('joining queue')
     queue.join()
- 
+
     # cancel the consumers, which are now idle
     for c in consumers:
         c.cancel()
-
 
 
 # Instantiate the parser
 parser = argparse.ArgumentParser(description='Gamepad Input Proxy')
 
 parser.add_argument('-l',
-    '--list',
-    action='store_true',
-    help='List available devices')
+                    '--list',
+                    action='store_true',
+                    help='List available devices')
 
 parser.add_argument('-c',
-    '--config',
-    type=str,
-    help='Config directory')
+                    '--config',
+                    type=str,
+                    help='Config directory')
 
 parser.add_argument('-v',
-    '--verbose',
-    action='store_true',
-    help='Verbose Logging enabled')
+                    '--verbose',
+                    action='store_true',
+                    help='Verbose Logging enabled')
 
 parser.add_argument('-b',
-    '--benchmark',
-    action='store_true',
-    help='Log the input events with timestamp')
+                    '--benchmark',
+                    action='store_true',
+                    help='Log the input events with timestamp')
 
 
 args = parser.parse_args()
 
 # engine = pyttsx3.init() # object creation
 # engine.setProperty('volume',1.0)
-# engine.setProperty('rate', 150) 
+# engine.setProperty('rate', 150)
 # engine.say("Monkey Ball")
 # engine.say("Mario Kart")
 # engine.say("Super Smash Brothers")
