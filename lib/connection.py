@@ -7,12 +7,12 @@ class Connection():
 
 
 class I2CConnector():
-    def __init__(self, deviceBus: int):
-        self.device = deviceBus
+    def __init__(self, device_bus: int):
+        self.device = device_bus
         self.bus = None
-        self.initializeBus()
+        self.initialize_bus()
 
-    def initializeBus(self):
+    def initialize_bus(self):
         self.bus = smbus.SMBus(self.device)
 
     def write(self, addr: int, register: int, data: list):
@@ -20,14 +20,14 @@ class I2CConnector():
             self.bus.write_i2c_block_data(addr, register, data)
         except IOError:
             print('i2c error', addr)
-            self.initializeBus()
+            self.initialize_bus()
 
     def writeByte(self, addr: int, data: int):
         try:
             self.bus.write_byte(addr, data)
         except IOError:
             print('i2c error', addr)
-            self.initializeBus()
+            self.initialize_bus()
 
 
 class I2CConnection(Connection):
