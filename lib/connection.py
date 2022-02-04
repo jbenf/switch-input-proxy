@@ -41,6 +41,6 @@ class I2CConnection(Connection):
         self.address = address
         self.connector = connector
 
-    """override
+    """override"""
     def write(self, register: int, data: list):
         self.connector.write(self.address, register, data)
