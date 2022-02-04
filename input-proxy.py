@@ -198,7 +198,7 @@ def initializeOutputs():
 
     displayConf = config.get('display', None)
     if displayConf != None:
-        connector.writeByte(displayConf.get('addr'), displayConf.get('icon'))
+        connector.write_byte(displayConf.get('addr'), displayConf.get('icon'))
 
     return ret
 
