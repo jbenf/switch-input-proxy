@@ -1,0 +1,51 @@
+name: Default
+i2c_device: 1
+analog:
+  MULT: 1.5
+display:
+  addr: 0x8
+  icon: 0x3
+
+devices:
+  - name: usb gamepad
+gamepads:
+  - name: Pro Controller
+    address: 0x51
+    devices:
+    - name: usb gamepad
+      bindings:
+      - event: BTN_Z
+        invoke: R
+      - event: BTN_TR
+        invoke: ZR
+      - event: BTN_THUMBL
+        invoke: ZL
+      - event: BTN_THUMBR
+        invoke: L
+      - event: BTN_EAST
+        invoke: A
+      - event: BTN_C
+        invoke: B
+      - event: BTN_NORTH
+        invoke: Y
+      - event: BTN_SOUTH
+        invoke: X
+      - event: BTN_TR2
+        invoke: PLUS
+      - event: BTN_TL
+        invoke: MINUS
+      - event: BTN_MODE
+        invoke: HOME
+      - event: ABS_HAT0X
+        state: -1
+        invoke: DPAD_LEFT
+      - event: ABS_HAT0X
+        state: 1
+        invoke: DPAD_RIGHT
+      - event: ABS_HAT0Y
+        state: -1
+        invoke: DPAD_UP
+      - event: ABS_HAT0Y
+        state: 1
+        invoke: DPAD_DOWN
+    
