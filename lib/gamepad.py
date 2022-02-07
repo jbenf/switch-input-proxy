@@ -1,8 +1,11 @@
+"""This module handles the interface to a i2c switch controller"""
+
 from typing import NamedTuple
 from lib.connection import Connection
 
 
 class Registers(NamedTuple):
+    """i2c Registers"""
     BTN_0 = 0x0
     BTN_1 = 0x1
     HAT = 0x2
@@ -12,7 +15,8 @@ class Registers(NamedTuple):
     RY = 0x6
 
 
-class btn_0_mask(NamedTuple):
+class Btn0Mask(NamedTuple):
+    """Bit Indices for the first register"""
     MINUS = 2**0
     PLUS = 2**1
     LCLICK = 2**2
@@ -22,6 +26,7 @@ class btn_0_mask(NamedTuple):
 
 
 class btn_1_mask(NamedTuple):
+    """Bit Indices for the second register"""
     Y = 2**0
     B = 2**1
     A = 2**2
@@ -33,6 +38,7 @@ class btn_1_mask(NamedTuple):
 
 
 class hat_mask(NamedTuple):
+    """Indices for the hat register"""
     DPAD_UP = 2**0
     DPAD_RIGHT = 2**1
     DPAD_DOWN = 2**2
@@ -40,6 +46,7 @@ class hat_mask(NamedTuple):
 
 
 class hat_values(NamedTuple):
+    """hat values"""
     UP = 0x00
     UP_RIGHT = 0x01
     RIGHT = 0x02
@@ -50,7 +57,7 @@ class hat_values(NamedTuple):
     UP_LEFT = 0x07
     CENTER = 0x08
 
-
+"""Mapping of source dpad values to hat values"""
 hat_map = {
     hat_mask.DPAD_UP: hat_values.UP,
     hat_mask.DPAD_UP | hat_mask.DPAD_RIGHT: hat_values.UP_RIGHT,
@@ -163,12 +170,12 @@ class Gamepad():
         'R': lambda self, state: handleBtn1(self, btn_1_mask.R, state),
         'ZL': lambda self, state: handleBtn1(self, btn_1_mask.ZL, state),
         'ZR': lambda self, state: handleBtn1(self, btn_1_mask.ZR, state),
-        'MINUS': lambda self, state: handleBtn0(self, btn_0_mask.MINUS, state),
-        'PLUS': lambda self, state: handleBtn0(self, btn_0_mask.PLUS, state),
-        'HOME': lambda self, state: handleBtn0(self, btn_0_mask.HOME, state),
-        'LCLICK': lambda self, state: handleBtn0(self, btn_0_mask.LCLICK, state),
-        'RCLICK': lambda self, state: handleBtn0(self, btn_0_mask.RCLICK, state),
-        'CAPTURE': lambda self, state: handleBtn0(self, btn_0_mask.CAPTURE, state),
+        'MINUS': lambda self, state: handleBtn0(self, Btn0Mask.MINUS, state),
+        'PLUS': lambda self, state: handleBtn0(self, Btn0Mask.PLUS, state),
+        'HOME': lambda self, state: handleBtn0(self, Btn0Mask.HOME, state),
+        'LCLICK': lambda self, state: handleBtn0(self, Btn0Mask.LCLICK, state),
+        'RCLICK': lambda self, state: handleBtn0(self, Btn0Mask.RCLICK, state),
+        'CAPTURE': lambda self, state: handleBtn0(self, Btn0Mask.CAPTURE, state),
         'DPAD_UP': lambda self, state: handleHat(self, hat_mask.DPAD_UP, state),
         'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
         'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
