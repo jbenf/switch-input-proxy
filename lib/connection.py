@@ -1,6 +1,6 @@
 """This module encapsulates a i2c connection"""
 
-import smbus
+from smbus2 import SMBus
 
 """Interface offering to write data into a register"""
 class Connection():
@@ -16,7 +16,7 @@ class I2CConnector(Connection):
         self.__initialize_bus()
 
     def __initialize_bus(self):
-        self.bus = smbus.SMBus(self.device)
+        self.bus = SMBus(self.device)
 
     """write data array into a register of a device"""
     def write(self, addr: int, register: int, data: list):
