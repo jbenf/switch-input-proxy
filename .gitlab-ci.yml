@@ -29,8 +29,7 @@ lint-test-job:   # This job also runs in the test stage.
   script:
     - pylint input-proxy.py ./lib/*.py
 
-deploy:
-  stage: deploy
+.ssh:
   image: alpine:3.14
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apk add --no-cache  openssh-client )'
@@ -39,16 +38,21 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
+
+deploy:
+  stage: deploy
+  extends: .ssh
   script:
-    - ssh $DEPLOYMENT_TARGET bash -c "systemctl stop input-proxy || true"
+    - ssh $DEPLOYMENT_TARGET bash -c "sudo systemctl stop input-proxy || true"
     - >
       ssh $DEPLOYMENT_TARGET bash <<EOF
+        sudo systemctl stop input-proxy || true
         echo first command
         echo second command
         cd /data/input-proxy
         pwd
         git pull
       EOF
-    - ssh $DEPLOYMENT_TARGET systemctl start input-proxy
+    - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
 
