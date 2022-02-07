@@ -5,13 +5,15 @@ from smbus2 import SMBus
 
 class Connection():
     """Interface offering to write data into a register"""
-    
+
     def write(self, register: int, data: list):
         """write data array into a register"""
         pass
 
+
 class I2CConnector(Connection):
     """Class encapsulating a i2c bus device"""
+
     def __init__(self, device_bus: int):
         self.device = device_bus
         self.bus = None
@@ -39,10 +41,12 @@ class I2CConnector(Connection):
 
 class I2CConnection(Connection):
     """Class encapsulating an i2c connection"""
+
     def __init__(self, address: int, connector: I2CConnector):
         self.address = address
         self.connector = connector
 
     """override"""
+
     def write(self, register: int, data: list):
         self.connector.write(self.address, register, data)
