@@ -34,4 +34,6 @@ deploy:
   image: alpine:3.14
   before_script:
     - command -v ssh-agent
+  script:
+    - echo "do nothing (yet)"
 
