@@ -34,6 +34,10 @@ deploy:
   image: alpine:3.14
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apk add --no-cache  openssh-client )'
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
   script:
-    - echo "do nothing (yet)"
+    - ssh $DEPLOYMENT_TARGET bash -c "whoami"
 
