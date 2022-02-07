@@ -45,7 +45,7 @@ class HatMask(NamedTuple):
     DPAD_LEFT = 2**3
 
 
-class hat_values(NamedTuple):
+class HatValues(NamedTuple):
     """hat values"""
     UP = 0x00
     UP_RIGHT = 0x01
@@ -57,24 +57,26 @@ class hat_values(NamedTuple):
     UP_LEFT = 0x07
     CENTER = 0x08
 
-"""Mapping of source dpad values to hat values"""
+# Mapping of source dpad values to hat values
 hat_map = {
-    HatMask.DPAD_UP: hat_values.UP,
-    HatMask.DPAD_UP | HatMask.DPAD_RIGHT: hat_values.UP_RIGHT,
-    HatMask.DPAD_RIGHT: hat_values.RIGHT,
-    HatMask.DPAD_DOWN | HatMask.DPAD_RIGHT: hat_values.DOWN_RIGHT,
-    HatMask.DPAD_DOWN: hat_values.DOWN,
-    HatMask.DPAD_DOWN | HatMask.DPAD_LEFT: hat_values.DOWN_LEFT,
-    HatMask.DPAD_LEFT: hat_values.LEFT,
-    HatMask.DPAD_UP | HatMask.DPAD_LEFT: hat_values.UP_LEFT,
+    HatMask.DPAD_UP: HatValues.UP,
+    HatMask.DPAD_UP | HatMask.DPAD_RIGHT: HatValues.UP_RIGHT,
+    HatMask.DPAD_RIGHT: HatValues.RIGHT,
+    HatMask.DPAD_DOWN | HatMask.DPAD_RIGHT: HatValues.DOWN_RIGHT,
+    HatMask.DPAD_DOWN: HatValues.DOWN,
+    HatMask.DPAD_DOWN | HatMask.DPAD_LEFT: HatValues.DOWN_LEFT,
+    HatMask.DPAD_LEFT: HatValues.LEFT,
+    HatMask.DPAD_UP | HatMask.DPAD_LEFT: HatValues.UP_LEFT,
 }
 
 
 class AnalogValues(NamedTuple):
+    """Special Analog Values"""
     CENTER = 0x80
 
 
 def handle_btn_0(self, mask: int, state: int):
+    """Handle events for the first register"""
     if state == 1:
         self.bitmap_BTN_0 = self.bitmap_BTN_0 | mask
     else:
@@ -84,6 +86,7 @@ def handle_btn_0(self, mask: int, state: int):
 
 
 def handle_btn_1(self, mask: int, state: int):
+    """Handle events for the second register"""
     if state == 1:
         self.bitmap_BTN_1 = self.bitmap_BTN_1 | mask
     else:
@@ -93,40 +96,46 @@ def handle_btn_1(self, mask: int, state: int):
 
 
 def handle_hat(self, mask: int, state: int):
+    """Handle events for the hat register"""
     if state == 1:
         self.bitmap_HAT = self.bitmap_HAT | mask
     else:
         self.bitmap_HAT = self.bitmap_HAT & ~mask
 
-    bitmap = hat_map.get(self.bitmap_HAT, hat_values.CENTER)
+    bitmap = hat_map.get(self.bitmap_HAT, HatValues.CENTER)
 
-    if bitmap == hat_values.CENTER:
+    if bitmap == HatValues.CENTER:
         self.bitmap_HAT = 0
 
     self.connection.write(Registers.HAT, [bitmap])
 
 
 def set_relative_lx(self, state: int):
+    """update the x axis of the left analog stick"""
     self.bitmap_LX = min(255, max(0, self.bitmap_LX + state))
     self.connection.write(Registers.LX, [self.bitmap_LX])
 
 
 def set_relative_ly(self, state: int):
+    """update the y axis of the left analog stick"""
     self.bitmap_LY = min(255, max(0, self.bitmap_LY + state))
     self.connection.write(Registers.LY, [self.bitmap_LY])
 
 
 def set_relative_rx(self, state: int):
+    """update the x axis of the right analog stick"""
     self.bitmap_RX = min(255, max(0, self.bitmap_RX + state))
     self.connection.write(Registers.RX, [self.bitmap_RX])
 
 
 def set_relative_ry(self, state: int):
+    """update the y axis of the right analog stick"""
     self.bitmap_RY = min(255, max(0, self.bitmap_RY + state))
     self.connection.write(Registers.RY, [self.bitmap_RY])
 
 
-def set_analog(self):
+def center_analog(self):
+    """set the absolute analog values to center"""
     self.bitmap_LX = AnalogValues.CENTER
     self.bitmap_LY = AnalogValues.CENTER
     self.bitmap_RX = AnalogValues.CENTER
@@ -139,6 +148,7 @@ def set_analog(self):
 
 
 def set_absolute_analog(self, register: int, state: int):
+    """set absolute analog values to a register"""
     self.connection.write(register, [state])
 
 
@@ -157,12 +167,14 @@ class Gamepad():
         self.connection = connection
 
     def event(self, invoke: str, state: int):
+        """handle a input event"""
         func = self.handling.get(invoke, None)
         if func != None:
             func(self, state)
         else:
             print('Unkown Event: ', invoke)
 
+    # Event mappings
     handling = {
         'A': lambda self, state: handle_btn_1(self, Btn1Mask.A, state),
         'B': lambda self, state: handle_btn_1(self, Btn1Mask.B, state),
@@ -190,5 +202,5 @@ class Gamepad():
         'LY_REL': lambda self, state: set_relative_ly(self, state),
         'RX_REL': lambda self, state: set_relative_rx(self, state),
         'RY_REL': lambda self, state: set_relative_ry(self, state),
-        'RESET_ANALOG': lambda self, state: set_analog(self),
+        'RESET_ANALOG': lambda self, state: center_analog(self),
     }
