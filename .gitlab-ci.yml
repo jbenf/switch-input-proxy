@@ -66,12 +66,11 @@ deploy:
 deploy_service_description:
   stage: deploy
   script:
-    - echo do nothing
+    - sudo systemctl daemon-reload
   needs: [ deploy_stop_service ]
   rules:
     - changes:
         - input-proxy.service
-      when: manual
 
 deploy_start_service:
   stage: post-deploy
