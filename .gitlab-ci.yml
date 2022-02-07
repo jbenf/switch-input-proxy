@@ -46,6 +46,7 @@ deploy_stop_service:
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl stop input-proxy
   allow_failure: true
+  needs: []
 
 
 deploy:
