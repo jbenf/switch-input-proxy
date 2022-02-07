@@ -14,38 +14,32 @@ gamepads:
     devices:
     - name: usb gamepad
       bindings:
-      - event: BTN_Z
+      - event: BTN_TOP2
         invoke: R
-      - event: BTN_TR
-        invoke: ZR
-      - event: BTN_THUMBL
-        invoke: ZL
-      - event: BTN_THUMBR
+      - event: BTN_PINKIE
         invoke: L
-      - event: BTN_EAST
+      - event: BTN_THUMB
         invoke: A
-      - event: BTN_C
+      - event: BTN_THUMB2
         invoke: B
-      - event: BTN_NORTH
+      - event: BTN_TOP
         invoke: Y
-      - event: BTN_SOUTH
+      - event: BTN_TRIGGER
         invoke: X
-      - event: BTN_TR2
+      - event: BTN_BASE4
         invoke: PLUS
-      - event: BTN_TL
+      - event: BTN_BASE3
         invoke: MINUS
-      - event: BTN_MODE
-        invoke: HOME
-      - event: ABS_HAT0X
-        state: -1
+      - event: ABS_X
+        state: 0
         invoke: DPAD_LEFT
-      - event: ABS_HAT0X
-        state: 1
+      - event: ABS_X
+        state: 255
         invoke: DPAD_RIGHT
-      - event: ABS_HAT0Y
-        state: -1
+      - event: ABS_Y
+        state: 0
         invoke: DPAD_UP
-      - event: ABS_HAT0Y
-        state: 1
+      - event: ABS_Y
+        state: 255
         invoke: DPAD_DOWN
     
