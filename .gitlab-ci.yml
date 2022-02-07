@@ -38,12 +38,19 @@ lint-test-job:   # This job also runs in the test stage.
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
+  
+deploy_stop_service:
+  stage: deploy
+  extends: .ssh
+  script:
+    - ssh $DEPLOYMENT_TARGET bash -c "sudo systemctl stop input-proxy"
+  allow_failure: true
+
 
 deploy:
   stage: deploy
   extends: .ssh
   script:
-    - ssh $DEPLOYMENT_TARGET bash -c "sudo systemctl stop input-proxy || true"
     - >
       ssh $DEPLOYMENT_TARGET bash <<EOF
         sudo systemctl stop input-proxy || true
@@ -53,6 +60,22 @@ deploy:
         pwd
         git pull
       EOF
+  needs: [ deploy_stop_service ]
+
+deploy_service_description:
+  stage: deploy
+  script:
+    - echo do nothing
+  needs: [ deploy ]
+  rules:
+    - changes:
+        - input-proxy.service
+      when: manual
+
+deploy_start_service:
+  stage: deploy
+  extends: .ssh
+  script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
-
+  needs: [ deploy ]
