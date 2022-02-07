@@ -38,6 +38,7 @@ deploy:
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
   script:
     - ssh $DEPLOYMENT_TARGET bash -c "whoami"
 
