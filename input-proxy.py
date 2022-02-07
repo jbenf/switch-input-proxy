@@ -48,7 +48,7 @@ def producer(queue, relQueue, name: str, index: int):
         print('Starting Producer ', name, index)
     while True:
         try:
-            device = findDevice(name, index)
+            device = find_device(name, index)
             while True:
                 try:
                     events = device.read()
@@ -90,7 +90,7 @@ def consumer(queue, bindings: dict):
             raise err
 
 
-def findDevice(name: str, aIndex: int):
+def find_device(name: str, aIndex: int):
     index = aIndex
     miceAndGamepads = devices.mice + devices.gamepads
     sortedDevices = sorted(
@@ -177,12 +177,12 @@ def signal_handler(sig, frame):
 
 
 def loadConfig(base_config, config_path):
-    config = {}
+    base = {}
 
     if base_config != None:
         with open(base_config, "r") as stream:
             try:
-                config = yaml.safe_load(stream)
+                base = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
                 print(exc)
                 os._exit(1)
@@ -190,10 +190,10 @@ def loadConfig(base_config, config_path):
     with open(config_path, "r") as stream:
         try:
             c = yaml.safe_load(stream)
-            config.update(c)
+            merged = base | c
             global analogConfig
-            analogConfig = AnalogConfig(config.get('analog', {}))
-            return config
+            analogConfig = AnalogConfig(merged.get('analog', {}))
+            return merged
         except yaml.YAMLError as exc:
             print(exc)
             os._exit(1)

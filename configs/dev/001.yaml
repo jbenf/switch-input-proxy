@@ -1,7 +1,7 @@
 name: Default
 
 gamepads:
-    address: 0x51
+  - address: 0x51
     devices:
     - name: usb gamepad
       bindings:
