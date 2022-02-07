@@ -26,7 +26,7 @@ lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   allow_failure: true
   before_script:
-    - pip install pylint
+    - pip install pylint smbus2
   script:
     - pylint input-proxy.py ./lib/*.py
 
