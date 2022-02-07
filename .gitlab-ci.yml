@@ -66,7 +66,7 @@ deploy_service_description:
   stage: deploy
   script:
     - echo do nothing
-  needs: [ deploy ]
+  needs: [ deploy_stop_service ]
   rules:
     - changes:
         - input-proxy.service
@@ -78,4 +78,4 @@ deploy_start_service:
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
-  needs: [ deploy ]
+  needs: [ deploy, deploy_service_description ]
