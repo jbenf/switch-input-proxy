@@ -67,7 +67,7 @@ deploy:
 deploy_service_description:
   stage: deploy
   script:
-    - sudo systemctl daemon-reload
+    - ssh $DEPLOYMENT_TARGET sudo systemctl daemon-reload
   needs: [ deploy_stop_service ]
   rules:
     - changes:
