@@ -169,7 +169,7 @@ class Gamepad():
     def event(self, invoke: str, state: int):
         """handle a input event"""
         func = self.handling.get(invoke, None)
-        if func != None:
+        if func is not None:
             func(self, state)
         else:
             print('Unkown Event: ', invoke)
@@ -198,9 +198,9 @@ class Gamepad():
         'LY': lambda self, state: set_absolute_analog(self, Registers.LY, state),
         'RX': lambda self, state: set_absolute_analog(self, Registers.RX, state),
         'RY': lambda self, state: set_absolute_analog(self, Registers.RY, state),
-        'LX_REL': lambda self, state: set_relative_lx(self, state),
-        'LY_REL': lambda self, state: set_relative_ly(self, state),
-        'RX_REL': lambda self, state: set_relative_rx(self, state),
-        'RY_REL': lambda self, state: set_relative_ry(self, state),
+        'LX_REL': set_relative_lx,
+        'LY_REL': set_relative_ly,
+        'RX_REL': set_relative_rx,
+        'RY_REL': set_relative_ry,
         'RESET_ANALOG': lambda self, state: center_analog(self),
     }
