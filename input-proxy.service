@@ -8,7 +8,7 @@ Type=simple
 Restart=always
 RestartSec=5
 User=pi
-ExecStart=/data/input-proxy/input-proxy.py -c /data/input-proxy/configs/dev/ -v
+ExecStart=/data/input-proxy/input-proxy.py -c /data/input-proxy/configs/dev/ -g /data/input-proxy/configs/global-dev.yaml -v
 
 [Install]
 WantedBy=multi-user.target
