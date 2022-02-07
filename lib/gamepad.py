@@ -25,7 +25,7 @@ class Btn0Mask(NamedTuple):
     CAPTURE = 2**5
 
 
-class btn_1_mask(NamedTuple):
+class Btn1Mask(NamedTuple):
     """Bit Indices for the second register"""
     Y = 2**0
     B = 2**1
@@ -37,7 +37,7 @@ class btn_1_mask(NamedTuple):
     ZR = 2**7
 
 
-class hat_mask(NamedTuple):
+class HatMask(NamedTuple):
     """Indices for the hat register"""
     DPAD_UP = 2**0
     DPAD_RIGHT = 2**1
@@ -59,22 +59,22 @@ class hat_values(NamedTuple):
 
 """Mapping of source dpad values to hat values"""
 hat_map = {
-    hat_mask.DPAD_UP: hat_values.UP,
-    hat_mask.DPAD_UP | hat_mask.DPAD_RIGHT: hat_values.UP_RIGHT,
-    hat_mask.DPAD_RIGHT: hat_values.RIGHT,
-    hat_mask.DPAD_DOWN | hat_mask.DPAD_RIGHT: hat_values.DOWN_RIGHT,
-    hat_mask.DPAD_DOWN: hat_values.DOWN,
-    hat_mask.DPAD_DOWN | hat_mask.DPAD_LEFT: hat_values.DOWN_LEFT,
-    hat_mask.DPAD_LEFT: hat_values.LEFT,
-    hat_mask.DPAD_UP | hat_mask.DPAD_LEFT: hat_values.UP_LEFT,
+    HatMask.DPAD_UP: hat_values.UP,
+    HatMask.DPAD_UP | HatMask.DPAD_RIGHT: hat_values.UP_RIGHT,
+    HatMask.DPAD_RIGHT: hat_values.RIGHT,
+    HatMask.DPAD_DOWN | HatMask.DPAD_RIGHT: hat_values.DOWN_RIGHT,
+    HatMask.DPAD_DOWN: hat_values.DOWN,
+    HatMask.DPAD_DOWN | HatMask.DPAD_LEFT: hat_values.DOWN_LEFT,
+    HatMask.DPAD_LEFT: hat_values.LEFT,
+    HatMask.DPAD_UP | HatMask.DPAD_LEFT: hat_values.UP_LEFT,
 }
 
 
-class analog_values(NamedTuple):
+class AnalogValues(NamedTuple):
     CENTER = 0x80
 
 
-def handleBtn0(self, mask: int, state: int):
+def handle_btn_0(self, mask: int, state: int):
     if state == 1:
         self.bitmap_BTN_0 = self.bitmap_BTN_0 | mask
     else:
@@ -83,7 +83,7 @@ def handleBtn0(self, mask: int, state: int):
     self.connection.write(Registers.BTN_0, [self.bitmap_BTN_0])
 
 
-def handleBtn1(self, mask: int, state: int):
+def handle_btn_1(self, mask: int, state: int):
     if state == 1:
         self.bitmap_BTN_1 = self.bitmap_BTN_1 | mask
     else:
@@ -92,7 +92,7 @@ def handleBtn1(self, mask: int, state: int):
     self.connection.write(Registers.BTN_1, [self.bitmap_BTN_1])
 
 
-def handleHat(self, mask: int, state: int):
+def handle_hat(self, mask: int, state: int):
     if state == 1:
         self.bitmap_HAT = self.bitmap_HAT | mask
     else:
@@ -106,31 +106,31 @@ def handleHat(self, mask: int, state: int):
     self.connection.write(Registers.HAT, [bitmap])
 
 
-def setRelativeLX(self, state: int):
+def set_relative_lx(self, state: int):
     self.bitmap_LX = min(255, max(0, self.bitmap_LX + state))
     self.connection.write(Registers.LX, [self.bitmap_LX])
 
 
-def setRelativeLY(self, state: int):
+def set_relative_ly(self, state: int):
     self.bitmap_LY = min(255, max(0, self.bitmap_LY + state))
     self.connection.write(Registers.LY, [self.bitmap_LY])
 
 
-def setRelativeRX(self, state: int):
+def set_relative_rx(self, state: int):
     self.bitmap_RX = min(255, max(0, self.bitmap_RX + state))
     self.connection.write(Registers.RX, [self.bitmap_RX])
 
 
-def setRelativeRY(self, state: int):
+def set_relative_ry(self, state: int):
     self.bitmap_RY = min(255, max(0, self.bitmap_RY + state))
     self.connection.write(Registers.RY, [self.bitmap_RY])
 
 
-def resetAnalog(self):
-    self.bitmap_LX = analog_values.CENTER
-    self.bitmap_LY = analog_values.CENTER
-    self.bitmap_RX = analog_values.CENTER
-    self.bitmap_RY = analog_values.CENTER
+def set_analog(self):
+    self.bitmap_LX = AnalogValues.CENTER
+    self.bitmap_LY = AnalogValues.CENTER
+    self.bitmap_RX = AnalogValues.CENTER
+    self.bitmap_RY = AnalogValues.CENTER
 
     self.connection.write(Registers.LX, [self.bitmap_LX])
     self.connection.write(Registers.LY, [self.bitmap_LY])
@@ -138,18 +138,20 @@ def resetAnalog(self):
     self.connection.write(Registers.RY, [self.bitmap_RY])
 
 
-def setAbsoluteAnalog(self, register: int, state: int):
+def set_absolute_analog(self, register: int, state: int):
     self.connection.write(register, [state])
 
 
 class Gamepad():
-    bitmap_BTN_0 = 0x00    # Buttons such as Minus, Home and Capture
-    bitmap_BTN_1 = 0x00    # Buttons such as A, B, X, Y
+    """This class maps input events to nintendo switch controller events and sends them via i2c"""
+
+    bitmap_BTN_0 = 0x00
+    bitmap_BTN_1 = 0x00
     bitmap_HAT = 0x00
-    bitmap_LX = analog_values.CENTER
-    bitmap_LY = analog_values.CENTER
-    bitmap_RX = analog_values.CENTER
-    bitmap_RY = analog_values.CENTER
+    bitmap_LX = AnalogValues.CENTER
+    bitmap_LY = AnalogValues.CENTER
+    bitmap_RX = AnalogValues.CENTER
+    bitmap_RY = AnalogValues.CENTER
 
     def __init__(self, connection: Connection):
         self.connection = connection
@@ -162,31 +164,31 @@ class Gamepad():
             print('Unkown Event: ', invoke)
 
     handling = {
-        'A': lambda self, state: handleBtn1(self, btn_1_mask.A, state),
-        'B': lambda self, state: handleBtn1(self, btn_1_mask.B, state),
-        'X': lambda self, state: handleBtn1(self, btn_1_mask.X, state),
-        'Y': lambda self, state: handleBtn1(self, btn_1_mask.Y, state),
-        'L': lambda self, state: handleBtn1(self, btn_1_mask.L, state),
-        'R': lambda self, state: handleBtn1(self, btn_1_mask.R, state),
-        'ZL': lambda self, state: handleBtn1(self, btn_1_mask.ZL, state),
-        'ZR': lambda self, state: handleBtn1(self, btn_1_mask.ZR, state),
-        'MINUS': lambda self, state: handleBtn0(self, Btn0Mask.MINUS, state),
-        'PLUS': lambda self, state: handleBtn0(self, Btn0Mask.PLUS, state),
-        'HOME': lambda self, state: handleBtn0(self, Btn0Mask.HOME, state),
-        'LCLICK': lambda self, state: handleBtn0(self, Btn0Mask.LCLICK, state),
-        'RCLICK': lambda self, state: handleBtn0(self, Btn0Mask.RCLICK, state),
-        'CAPTURE': lambda self, state: handleBtn0(self, Btn0Mask.CAPTURE, state),
-        'DPAD_UP': lambda self, state: handleHat(self, hat_mask.DPAD_UP, state),
-        'DPAD_RIGHT': lambda self, state: handleHat(self, hat_mask.DPAD_RIGHT, state),
-        'DPAD_DOWN': lambda self, state: handleHat(self, hat_mask.DPAD_DOWN, state),
-        'DPAD_LEFT': lambda self, state: handleHat(self, hat_mask.DPAD_LEFT, state),
-        'LX': lambda self, state: setAbsoluteAnalog(self, Registers.LX, state),
-        'LY': lambda self, state: setAbsoluteAnalog(self, Registers.LY, state),
-        'RX': lambda self, state: setAbsoluteAnalog(self, Registers.RX, state),
-        'RY': lambda self, state: setAbsoluteAnalog(self, Registers.RY, state),
-        'LX_REL': lambda self, state: setRelativeLX(self, state),
-        'LY_REL': lambda self, state: setRelativeLY(self, state),
-        'RX_REL': lambda self, state: setRelativeRX(self, state),
-        'RY_REL': lambda self, state: setRelativeRY(self, state),
-        'RESET_ANALOG': lambda self, state: resetAnalog(self),
+        'A': lambda self, state: handle_btn_1(self, Btn1Mask.A, state),
+        'B': lambda self, state: handle_btn_1(self, Btn1Mask.B, state),
+        'X': lambda self, state: handle_btn_1(self, Btn1Mask.X, state),
+        'Y': lambda self, state: handle_btn_1(self, Btn1Mask.Y, state),
+        'L': lambda self, state: handle_btn_1(self, Btn1Mask.L, state),
+        'R': lambda self, state: handle_btn_1(self, Btn1Mask.R, state),
+        'ZL': lambda self, state: handle_btn_1(self, Btn1Mask.ZL, state),
+        'ZR': lambda self, state: handle_btn_1(self, Btn1Mask.ZR, state),
+        'MINUS': lambda self, state: handle_btn_0(self, Btn0Mask.MINUS, state),
+        'PLUS': lambda self, state: handle_btn_0(self, Btn0Mask.PLUS, state),
+        'HOME': lambda self, state: handle_btn_0(self, Btn0Mask.HOME, state),
+        'LCLICK': lambda self, state: handle_btn_0(self, Btn0Mask.LCLICK, state),
+        'RCLICK': lambda self, state: handle_btn_0(self, Btn0Mask.RCLICK, state),
+        'CAPTURE': lambda self, state: handle_btn_0(self, Btn0Mask.CAPTURE, state),
+        'DPAD_UP': lambda self, state: handle_hat(self, HatMask.DPAD_UP, state),
+        'DPAD_RIGHT': lambda self, state: handle_hat(self, HatMask.DPAD_RIGHT, state),
+        'DPAD_DOWN': lambda self, state: handle_hat(self, HatMask.DPAD_DOWN, state),
+        'DPAD_LEFT': lambda self, state: handle_hat(self, HatMask.DPAD_LEFT, state),
+        'LX': lambda self, state: set_absolute_analog(self, Registers.LX, state),
+        'LY': lambda self, state: set_absolute_analog(self, Registers.LY, state),
+        'RX': lambda self, state: set_absolute_analog(self, Registers.RX, state),
+        'RY': lambda self, state: set_absolute_analog(self, Registers.RY, state),
+        'LX_REL': lambda self, state: set_relative_lx(self, state),
+        'LY_REL': lambda self, state: set_relative_ly(self, state),
+        'RX_REL': lambda self, state: set_relative_rx(self, state),
+        'RY_REL': lambda self, state: set_relative_ry(self, state),
+        'RESET_ANALOG': lambda self, state: set_analog(self),
     }
