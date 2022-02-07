@@ -17,6 +17,7 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
+  - post-deploy
 
 image: python:3.9.2
 
@@ -73,9 +74,8 @@ deploy_service_description:
       when: manual
 
 deploy_start_service:
-  stage: deploy
+  stage: post-deploy
   extends: .ssh
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
-  needs: [ deploy, deploy_service_description ]
