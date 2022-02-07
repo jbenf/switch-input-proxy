@@ -40,9 +40,8 @@ deploy:
     - chmod 700 ~/.ssh
     - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
   script:
-    - systemctl stop input-proxy || true
-    - cd /data/input-proxy
-    - git pull
-    - systemctl start input-proxy
-    - journalctl -u input-proxy -n 20
+    - ssh $DEPLOYMENT_TARGET bash -c "systemctl stop input-proxy || true"
+    - ssh $DEPLOYMENT_TARGET bash -c "cd /data/input-proxy; git pull"
+    - ssh $DEPLOYMENT_TARGET systemctl start input-proxy
+    - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
 
