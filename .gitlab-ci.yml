@@ -41,7 +41,7 @@ deploy:
     - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
   script:
     - ssh $DEPLOYMENT_TARGET bash -c "systemctl stop input-proxy || true"
-    - ssh $DEPLOYMENT_TARGET bash -c "cd /data/input-proxy; git pull"
+    - ssh $DEPLOYMENT_TARGET bash -c "cd /data/input-proxy && pwd && git pull"
     - ssh $DEPLOYMENT_TARGET systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
 
