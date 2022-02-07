@@ -44,7 +44,7 @@ deploy_stop_service:
   stage: deploy
   extends: .ssh
   script:
-    - ssh $DEPLOYMENT_TARGET bash -c "sudo systemctl stop input-proxy"
+    - ssh $DEPLOYMENT_TARGET sudo systemctl stop input-proxy
   allow_failure: true
 
 
