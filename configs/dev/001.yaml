@@ -1,15 +1,6 @@
 name: Default
-i2c_device: 1
-analog:
-  MULT: 1.5
-display:
-  addr: 0x8
-  icon: 0x3
 
-devices:
-  - name: usb gamepad
 gamepads:
-  - name: Pro Controller
     address: 0x51
     devices:
     - name: usb gamepad

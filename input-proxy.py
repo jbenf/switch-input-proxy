@@ -176,13 +176,24 @@ def signal_handler(sig, frame):
     os._exit(0)
 
 
-def loadConfig(path):
-    with open(path, "r") as stream:
+def loadConfig(base_config, config_path):
+    config = {}
+
+    if base_config != None:
+        with open(base_config, "r") as stream:
+            try:
+                config = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+                os._exit(1)
+
+    with open(config_path, "r") as stream:
         try:
             c = yaml.safe_load(stream)
+            config.update(c)
             global analogConfig
-            analogConfig = AnalogConfig(c.get('analog', {}))
-            return c
+            analogConfig = AnalogConfig(config.get('analog', {}))
+            return config
         except yaml.YAMLError as exc:
             print(exc)
             os._exit(1)
@@ -298,6 +309,11 @@ parser.add_argument('-c',
                     type=str,
                     help='Config directory')
 
+parser.add_argument('-g',
+                    '--glob',
+                    type=str,
+                    help='Global Configuration')
+
 parser.add_argument('-v',
                     '--verbose',
                     action='store_true',
@@ -335,10 +351,11 @@ else:
         print("Please provide the configuration directory")
     else:
         configFiles = glob.glob(os.path.join(args.config, '*.yaml'))
-        if len(configFiles) == 0:
+        global_config = args.glob
+        if len(configFiles) == 0 and len(global_config) == 0:
             print("No config file found")
         else:
             deviceIndices = {}
-            config = loadConfig(configFiles[0])
+            config = loadConfig(global_config, configFiles[0])
             configIndex = 0
             main()
