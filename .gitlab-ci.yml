@@ -29,3 +29,9 @@ lint-test-job:   # This job also runs in the test stage.
   script:
     - pylint input-proxy.py ./lib/*.py
 
+deploy:
+  stage: deploy
+  image: alpine:3.14
+  before_script:
+    - command -v ssh-agent
+
