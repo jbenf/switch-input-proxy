@@ -8,10 +8,9 @@ class Connection():
 
     def write(self, register: int, data: list):
         """write data array into a register"""
-        pass
 
 
-class I2CConnector(Connection):
+class I2CConnector():
     """Class encapsulating a i2c bus device"""
 
     def __init__(self, device_bus: int):
@@ -45,8 +44,6 @@ class I2CConnection(Connection):
     def __init__(self, address: int, connector: I2CConnector):
         self.address = address
         self.connector = connector
-
-    """override"""
 
     def write(self, register: int, data: list):
         self.connector.write(self.address, register, data)
