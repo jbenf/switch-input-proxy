@@ -60,6 +60,7 @@ deploy:
         cd /data/input-proxy
         pwd
         git pull
+        chmod +x input-proxy.py
       EOF
   needs: [ deploy_stop_service ]
 
