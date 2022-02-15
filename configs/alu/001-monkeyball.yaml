@@ -1,21 +1,67 @@
 name: Default
-i2c_device: 1
-analog:
-  MULT: 1.5
-display:
-  addr: 0x8
-  icon: 0x3
 
 devices:
-#- name: HORI CO.,LTD. POKKEN CONTROLLER 
-# - name: usb gamepad
-# - name: SINOWEALTH Wired Gaming Mouse
   - name: HID 0838:8918
     index: 0
+    bindings:
+      - event: ABS_X
+        address: 0x51
+        invoke: LX
+      - event: ABS_Y
+        address: 0x51
+        invoke: LY
   - name: HID 0838:8918
     index: 1
-  - name: HID 0838:8918
-    index: 2
+    bindings:
+      - event: BTN_Z
+        address: 0x51
+        invoke: R
+      - event: BTN_TR
+        address: 0x51
+        invoke: ZR
+      - event: BTN_THUMBL
+        address: 0x51
+        invoke: ZL
+      - event: BTN_THUMBR
+        address: 0x51
+        invoke: L
+      - event: BTN_EAST
+        address: 0x51
+        invoke: A
+      - event: BTN_C
+        address: 0x51
+        invoke: B
+      - event: BTN_NORTH
+        address: 0x51
+        invoke: Y
+      - event: BTN_SOUTH
+        address: 0x51
+        invoke: X
+      - event: BTN_TR2
+        address: 0x51
+        invoke: PLUS
+      - event: BTN_TL
+        address: 0x51
+        invoke: MINUS
+      - event: BTN_MODE
+        address: 0x51
+        invoke: HOME
+      - event: ABS_HAT0X
+        state: -1
+        address: 0x51
+        invoke: DPAD_LEFT
+      - event: ABS_HAT0X
+        state: 1
+        address: 0x51
+        invoke: DPAD_RIGHT
+      - event: ABS_HAT0Y
+        state: -1
+        address: 0x51
+        invoke: DPAD_UP
+      - event: ABS_HAT0Y
+        state: 1
+        address: 0x51
+        invoke: DPAD_DOWN
 gamepads:
   - name: Pro Controller
     address: 0x51
@@ -66,3 +112,66 @@ gamepads:
       - event: ABS_Y
         invoke: LY
     
+
+name: Default
+category: Default
+
+devices:
+  - name: usb gamepad
+    index: 0
+    bindings:
+      - event: BTN_TOP2
+        invoke: R
+        address: 0x51
+      - event: BTN_PINKIE
+        invoke: L
+        address: 0x51
+      - event: BTN_THUMB
+        invoke: A
+        address: 0x51
+      - event: BTN_THUMB2
+        invoke: B
+        address: 0x51
+      - event: BTN_TOP
+        invoke: Y
+        address: 0x51
+      - event: BTN_TRIGGER
+        invoke: X
+        address: 0x51
+      - event: BTN_BASE4
+        invoke: PLUS
+        address: 0x51
+      - event: BTN_BASE3
+        invoke: MINUS
+        address: 0x51
+      - event: ABS_X
+        state: 0
+        invoke: DPAD_LEFT
+        address: 0x51
+      - event: ABS_X
+        state: 255
+        invoke: DPAD_RIGHT
+        address: 0x51
+      - event: ABS_Y
+        state: 0
+        invoke: DPAD_UP
+        address: 0x51
+      - event: ABS_Y
+        state: 255
+        invoke: DPAD_DOWN
+        address: 0x51
+  - name: SINOWEALTH Wired Gaming Mouse
+    bindings:
+      - event: ABS_X
+        address: 0x51
+        invoke: LX
+      - event: ABS_Y
+        address: 0x51
+        invoke: LY
+    relative:
+      - event: REL_X
+        invoke: ABS_X
+        mult: 1.5
+      - event: REL_Y
+        invoke: ABS_Y
+        mult: 1.5

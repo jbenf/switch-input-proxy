@@ -1,61 +1,66 @@
 """This module handles the interface to a i2c switch controller"""
 
-from typing import NamedTuple
+from dataclasses import dataclass
 from lib.connection import Connection
 
 
-class Registers(NamedTuple):
+@dataclass
+class Registers:
     """i2c Registers"""
-    BTN_0 = 0x0
-    BTN_1 = 0x1
-    HAT = 0x2
-    LX = 0x3
-    LY = 0x4
-    RX = 0x5
-    RY = 0x6
+    BTN_0: int = 0x0
+    BTN_1: int = 0x1
+    HAT: int  = 0x2
+    LX: int  = 0x3
+    LY: int  = 0x4
+    RX: int  = 0x5
+    RY: int  = 0x6
 
 
-class Btn0Mask(NamedTuple):
+@dataclass
+class Btn0Mask:
     """Bit Indices for the first register"""
-    MINUS = 2**0
-    PLUS = 2**1
-    LCLICK = 2**2
-    RCLICK = 2**3
-    HOME = 2**4
-    CAPTURE = 2**5
+    MINUS: int  = 2**0
+    PLUS: int  = 2**1
+    LCLICK: int  = 2**2
+    RCLICK: int  = 2**3
+    HOME: int  = 2**4
+    CAPTURE: int  = 2**5
 
 
-class Btn1Mask(NamedTuple):
+@dataclass
+class Btn1Mask:
     """Bit Indices for the second register"""
-    Y = 2**0
-    B = 2**1
-    A = 2**2
-    X = 2**3
-    L = 2**4
-    R = 2**5
-    ZL = 2**6
-    ZR = 2**7
+    Y: int  = 2**0
+    B: int  = 2**1
+    A: int  = 2**2
+    X: int  = 2**3
+    L: int  = 2**4
+    R: int  = 2**5
+    ZL: int  = 2**6
+    ZR: int  = 2**7
 
 
-class HatMask(NamedTuple):
+@dataclass
+class HatMask:
     """Indices for the hat register"""
-    DPAD_UP = 2**0
-    DPAD_RIGHT = 2**1
-    DPAD_DOWN = 2**2
-    DPAD_LEFT = 2**3
+    DPAD_UP: int  = 2**0
+    DPAD_RIGHT: int  = 2**1
+    DPAD_DOWN: int  = 2**2
+    DPAD_LEFT: int  = 2**3
 
 
-class HatValues(NamedTuple):
+@dataclass
+class HatValues:
     """hat values"""
-    UP = 0x00
-    UP_RIGHT = 0x01
-    RIGHT = 0x02
-    DOWN_RIGHT = 0x03
-    DOWN = 0x04
-    DOWN_LEFT = 0x05
-    LEFT = 0x06
-    UP_LEFT = 0x07
-    CENTER = 0x08
+    UP: int  = 0x00
+    UP_RIGHT: int  = 0x01
+    RIGHT: int  = 0x02
+    DOWN_RIGHT: int  = 0x03
+    DOWN: int  = 0x04
+    DOWN_LEFT: int  = 0x05
+    LEFT: int  = 0x06
+    UP_LEFT: int  = 0x07
+    CENTER: int  = 0x08
 
 # Mapping of source dpad values to hat values
 hat_map = {
@@ -70,9 +75,10 @@ hat_map = {
 }
 
 
-class AnalogValues(NamedTuple):
+@dataclass
+class AnalogValues:
     """Special Analog Values"""
-    CENTER = 0x80
+    CENTER: int  = 0x80
 
 
 def handle_btn_0(self, mask: int, state: int):
@@ -97,6 +103,8 @@ def handle_btn_1(self, mask: int, state: int):
 
 def handle_hat(self, mask: int, state: int):
     """Handle events for the hat register"""
+    initial_bitmap = hat_map.get(self.bitmap_HAT, HatValues.CENTER)
+
     if state == 1:
         self.bitmap_HAT = self.bitmap_HAT | mask
     else:
@@ -107,7 +115,8 @@ def handle_hat(self, mask: int, state: int):
     if bitmap == HatValues.CENTER:
         self.bitmap_HAT = 0
 
-    self.connection.write(Registers.HAT, [bitmap])
+    if initial_bitmap != bitmap:
+        self.connection.write(Registers.HAT, [bitmap])
 
 
 def set_relative_lx(self, state: int):
