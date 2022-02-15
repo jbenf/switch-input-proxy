@@ -16,37 +16,59 @@
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
+  - pre-deploy
   - deploy
   - post-deploy
 
 image: python:3.9.2
 
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+lint:   
+  stage: test
   allow_failure: true
   before_script:
     - pip install pylint smbus2
   script:
-    - pylint input-proxy.py ./lib/*.py
+    - pylint input_proxy.py ./lib/*.py
+  needs: []
+
+mypy-type-check:
+  stage: test
+
+  before_script:
+    - pip install mypy smbus2 types-PyYAML inputs
+  script:
+    - stubgen -p inputs
+    - grep -v "wintypes." out/inputs.pyi > tmpfile && mv tmpfile out/inputs.pyi
+    - mypy .
+  needs: []
+
+sanity-check:
+  stage: test
+
+  before_script:
+    - pip install PyYAML inputs smbus2
+  script:
+    - python3 input_proxy.py -c configs/dev -g configs/global-dev.yaml -l
+  needs: []
 
 .ssh:
   image: alpine:3.14
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apk add --no-cache  openssh-client )'
     - eval $(ssh-agent -s)
-    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add -
+    - echo "$DEPLOYMENT_SSH_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$DEPLOYMENT_TARGET_ID" | tr -d '\r' >> ~/.ssh/known_hosts
+    - echo "$DEPLOYMENT_TARGET_ID" >> ~/.ssh/known_hosts
   
 deploy_stop_service:
-  stage: deploy
+  stage: pre-deploy
   extends: .ssh
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl stop input-proxy
   allow_failure: true
-  needs: []
+  needs: [ ]
 
 
 deploy:
@@ -58,10 +80,12 @@ deploy:
         sudo systemctl stop input-proxy || true
         echo first command
         echo second command
-        cd /data/input-proxy
+        cd /data/input_proxy
         pwd
+        git reset --hard
+        git checkout $CI_COMMIT_BRANCH
         git pull
-        chmod +x input-proxy.py
+        chmod +x input_proxy.py
       EOF
   needs: [ deploy_stop_service ]
 

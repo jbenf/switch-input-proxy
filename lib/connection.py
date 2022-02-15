@@ -10,12 +10,21 @@ class Connection():
         """write data array into a register"""
 
 
+class DummyConnection(Connection):
+    """Dummy Connection for testing"""
+    def __init__(self, name):
+        self.name = name
+
+    def write(self, register: int, data: list):
+        print(self.name, 'write', hex(register), [hex(d) for d in data])
+
+
 class I2CConnector():
     """Class encapsulating a i2c bus device"""
+    bus: SMBus
 
     def __init__(self, device_bus: int):
         self.device = device_bus
-        self.bus = None
         self.__initialize_bus()
 
     def __initialize_bus(self):
