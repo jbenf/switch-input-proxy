@@ -88,7 +88,7 @@ def consumer(queue: Queue[Event], config: Configuration):
                 if existing_state == None or existing_state == b.zero_pos:
                     events[b.invoke] = state
             
-            for invoke, state in events:
+            for invoke, state in events.items():
                 g.event(invoke, state, verbose_output=VERBOSE)
             
             if len(bindings) == 0:
