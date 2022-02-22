@@ -3,7 +3,7 @@
 from threading import Thread
 from queue import Queue
 import time
-from typing import List, NamedTuple
+from typing import Dict, List, NamedTuple
 from inputs import devices, InputDevice, UnknownEventCode
 import sched
 import signal
@@ -69,6 +69,8 @@ def consumer(queue: Queue[Event], config: Configuration):
         ev = queue.get()
         try:
             bindings = ev.deviceConfig.mappings.get(ev.payload.code, [])
+
+            events: Dict[str, int] = {}
             for b in bindings:
                 g = gamepads[b.address]
 
@@ -77,11 +79,17 @@ def consumer(queue: Queue[Event], config: Configuration):
                 if b.state == INVALID:
                     state = ev.payload.state
                 elif b.state == ev.payload.state:
-                    state = 1 if b.invoke_state == INVALID else b.invoke_state
+                    state = b.invoke_state
                 else:
-                    state = 0 if b.zero_pos == INVALID else b.zero_pos
+                    state = b.zero_pos
                 
-                g.event(b.invoke, state, verbose_output=VERBOSE)
+                existing_state = events.get(b.invoke, None)
+
+                if existing_state == None or existing_state == b.zero_pos:
+                    events[b.invoke] = state
+            
+            for invoke, state in events:
+                g.event(invoke, state, verbose_output=VERBOSE)
             
             if len(bindings) == 0:
                 print('unconfigured event:', str(ev.deviceConfig), ev.payload.code)

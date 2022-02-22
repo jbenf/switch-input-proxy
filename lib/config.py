@@ -9,8 +9,8 @@ class BindingConfig:
         self.state: int = data.get('state', INVALID)
         self.invoke: str = data['invoke']
         self.address: int = data.get('address', INVALID)
-        self.invoke_state: int = data.get('invoke_state', INVALID)
-        self.zero_pos: int = data.get('zero_pos', INVALID)
+        self.invoke_state: int = data.get('invoke_state', 1)
+        self.zero_pos: int = data.get('zero_pos', 0)
 
 class DeviceConfig:
     def __init__(self, data: dict):
