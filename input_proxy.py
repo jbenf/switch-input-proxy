@@ -3,7 +3,8 @@
 from threading import Thread
 from queue import Queue
 import time
-from typing import Dict, List, NamedTuple
+import sys
+from typing import Dict, List, Tuple
 from inputs import devices, InputDevice, UnknownEventCode
 import sched
 import signal
@@ -70,7 +71,7 @@ def consumer(queue: Queue[Event], config: Configuration):
         try:
             bindings = ev.deviceConfig.mappings.get(ev.payload.code, [])
 
-            events: Dict[str, int] = {}
+            events: Dict[str, Tuple[str, int]] = {}
             for b in bindings:
                 g = gamepads[b.address]
 
@@ -83,13 +84,13 @@ def consumer(queue: Queue[Event], config: Configuration):
                 else:
                     state = b.zero_pos
                 
-                existing_state = events.get(b.invoke, None)
+                existing_event = events.get(ev.payload.code, None)
 
-                if existing_state == None or existing_state == b.zero_pos:
-                    events[b.invoke] = state
+                if existing_event is None or existing_event[1] == b.zero_pos:
+                    events[ev.payload.code] = (b.invoke, state)
             
-            for invoke, state in events.items():
-                g.event(invoke, state, verbose_output=VERBOSE)
+            for event in events.values():
+                g.event(event[0], event[1], verbose_output=VERBOSE)
             
             if len(bindings) == 0:
                 print('unconfigured event:', str(ev.deviceConfig), ev.payload.code)
@@ -154,9 +155,15 @@ class IndexItem():
     
     def set_value(self, value: int):
         self._value = value
-        
+
+
+
+def except_hook(exctype, value, traceback):
+    os._exit(1)
 
 def main():
+    sys.excepthook = except_hook
+
     queue = Queue[Event](5000)
     relQueue = Queue[Event](5000)
     scheduler = sched.scheduler(time.time, time.sleep)

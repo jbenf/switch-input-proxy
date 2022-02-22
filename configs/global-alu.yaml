@@ -12,11 +12,9 @@ menu:
     index: 1
     bindings:
     - event: ABS_HAT0Y
-      state: -1
+      state: 1
       invoke: NEXT_CONFIG
     - event: ABS_HAT0Y
-      state: 1
+      state: -1
       invoke: PREV_CONFIG
-    - event: BTN_BASE3
-      invoke: TOGGLE_WIFI
   
