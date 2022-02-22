@@ -72,9 +72,11 @@ def consumer(queue: Queue[Event], config: Configuration):
             for b in bindings:
                 g = gamepads[b.address]
 
-                state = ev.payload.state
+                state = 0
                 
-                if b.state == ev.payload.state:
+                if b.state == INVALID:
+                    state = ev.payload.state
+                elif b.state == ev.payload.state:
                     state = 1 if b.invoke_state == INVALID else b.invoke_state
                 else:
                     state = 0 if b.zero_pos == INVALID else b.zero_pos
