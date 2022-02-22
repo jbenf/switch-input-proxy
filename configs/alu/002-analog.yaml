@@ -1,38 +1,18 @@
-name: Default
+name: Analog
 
 devices:
   - name: HID 0838:8918
     index: 0
-    bindings:
-      - event: ABS_X
-        address: 0x51
-        invoke: LX
-      - event: ABS_Y
-        address: 0x51
-        invoke: LY
-    relative:
-      - event: REL_X
-        invoke: ABS_X
-        mult: 1.5
-      - event: REL_Y
-        invoke: ABS_Y
-        mult: 1.5
   
   - name: HID 0838:8918
     index: 1
     bindings:
       - event: BTN_Z
         address: 0x51
-        invoke: R
+        invoke: L
       - event: BTN_TR
         address: 0x51
-        invoke: ZR
-      - event: BTN_THUMBL
-        address: 0x51
-        invoke: ZL
-      - event: BTN_THUMBR
-        address: 0x51
-        invoke: L
+        invoke: R
       - event: BTN_EAST
         address: 0x51
         invoke: A
@@ -57,35 +37,37 @@ devices:
       - event: ABS_HAT0X
         state: -1
         address: 0x51
-        invoke: DPAD_LEFT
+        invoke: LX
+        invoke_state: 0
+        zero_pos: 127
       - event: ABS_HAT0X
         state: 1
         address: 0x51
-        invoke: DPAD_RIGHT
+        invoke: LX
+        invoke_state: 255
+        zero_pos: 127
       - event: ABS_HAT0Y
         state: -1
         address: 0x51
-        invoke: DPAD_UP
+        invoke: LY
+        invoke_state: 255
+        zero_pos: 127
       - event: ABS_HAT0Y
         state: 1
         address: 0x51
-        invoke: DPAD_DOWN
+        invoke: LY
+        invoke_state: 255
+        zero_pos: 127
   
   - name: HID 0838:8918
     index: 2
     bindings:
       - event: BTN_Z
         address: 0x52
-        invoke: R
+        invoke: L
       - event: BTN_TR
         address: 0x52
-        invoke: ZR
-      - event: BTN_THUMBL
-        address: 0x52
-        invoke: ZL
-      - event: BTN_THUMBR
-        address: 0x52
-        invoke: L
+        invoke: R
       - event: BTN_EAST
         address: 0x52
         invoke: A
@@ -110,16 +92,24 @@ devices:
       - event: ABS_HAT0X
         state: -1
         address: 0x52
-        invoke: DPAD_LEFT
+        invoke: LX
+        invoke_state: 0
+        zero_pos: 127
       - event: ABS_HAT0X
         state: 1
         address: 0x52
-        invoke: DPAD_RIGHT
+        invoke: LX
+        invoke_state: 255
+        zero_pos: 127
       - event: ABS_HAT0Y
         state: -1
         address: 0x52
-        invoke: DPAD_UP
+        invoke: LY
+        invoke_state: 255
+        zero_pos: 127
       - event: ABS_HAT0Y
         state: 1
         address: 0x52
-        invoke: DPAD_DOWN
+        invoke: LY
+        invoke_state: 255
+        zero_pos: 127

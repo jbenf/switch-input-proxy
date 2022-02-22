@@ -71,13 +71,15 @@ def consumer(queue: Queue[Event], config: Configuration):
             bindings = ev.deviceConfig.mappings.get(ev.payload.code, [])
             for b in bindings:
                 g = gamepads[b.address]
+
+                state = ev.payload.state
                 
-                if b.state == INVALID:
-                    g.event(b.invoke, ev.payload.state, verbose_output=VERBOSE)
-                elif b.state == ev.payload.state:
-                    g.event(b.invoke, 1, verbose_output=VERBOSE)
+                if b.state == ev.payload.state:
+                    state = 1 if b.invoke_state == INVALID else b.invoke_state
                 else:
-                    g.event(b.invoke, 0, verbose_output=VERBOSE)
+                    state = 0 if b.zero_pos == INVALID else b.zero_pos
+                
+                g.event(b.invoke, state, verbose_output=VERBOSE)
             
             if len(bindings) == 0:
                 print('unconfigured event:', str(ev.deviceConfig), ev.payload.code)

@@ -5,10 +5,12 @@ INVALID = -999
 
 class BindingConfig:
     def __init__(self, data: dict):
-        self.event = data['event']
-        self.state = data.get('state', INVALID)
-        self.invoke = data['invoke']
-        self.address = data.get('address', INVALID)
+        self.event: str = data['event']
+        self.state: int = data.get('state', INVALID)
+        self.invoke: str = data['invoke']
+        self.address: int = data.get('address', INVALID)
+        self.invoke_state: int = data.get('invoke_state', INVALID)
+        self.zero_pos: int = data.get('zero_pos', INVALID)
 
 class DeviceConfig:
     def __init__(self, data: dict):
