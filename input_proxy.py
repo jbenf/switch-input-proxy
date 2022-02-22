@@ -42,9 +42,9 @@ class AnalogConfig():
 def producer(dispatcher: EventDispatcher, deviceConfig: DeviceConfig, config: ConfigurationProvider):
     if VERBOSE:
         print('Starting Producer ', deviceConfig)
+    currentConfig = config.current_config
     while True:
         try:
-            currentConfig = config.current_config
             device = find_device(deviceConfig)
             while True:
                 try:
@@ -52,6 +52,10 @@ def producer(dispatcher: EventDispatcher, deviceConfig: DeviceConfig, config: Co
                     for event in events:
                         dispatcher.handleEvent(deviceConfig, event, verbose_logging = args.benchmark or VERBOSE)
                     if currentConfig != config.current_config:
+                        currentConfig = config.current_config
+                        for d in currentConfig.devices:
+                            if d == deviceConfig:
+                                deviceConfig = d
                         break
                 except UnknownEventCode:
                     pass
@@ -129,9 +133,6 @@ def listDevices():
         print(d)
 
 
-def signal_handler(sig, frame):
-    os._exit(0)
-
 
 def loadConfig(base_config, config_path, display_cmd = 'down'):
     try:
@@ -163,6 +164,9 @@ class IndexItem():
 
 def except_hook(exctype, value, traceback):
     os._exit(1)
+
+def signal_handler(sig, frame):
+    os._exit(0)
 
 def main():
     sys.excepthook = except_hook
