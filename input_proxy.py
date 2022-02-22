@@ -39,17 +39,20 @@ class AnalogConfig():
         self.RELATIVE = cfg.get('RELATIVE', True)
 
 
-def producer(dispatcher: EventDispatcher, relQueue: Queue[Event], deviceConfig: DeviceConfig):
+def producer(dispatcher: EventDispatcher, deviceConfig: DeviceConfig, config: ConfigurationProvider):
     if VERBOSE:
         print('Starting Producer ', deviceConfig)
     while True:
         try:
+            currentConfig = config.current_config
             device = find_device(deviceConfig)
             while True:
                 try:
                     events = device.read()
                     for event in events:
                         dispatcher.handleEvent(deviceConfig, event, verbose_logging = args.benchmark or VERBOSE)
+                    if currentConfig != config.current_config:
+                        break
                 except UnknownEventCode:
                     pass
 
@@ -165,7 +168,6 @@ def main():
     sys.excepthook = except_hook
 
     queue = Queue[Event](5000)
-    relQueue = Queue[Event](5000)
     scheduler = sched.scheduler(time.time, time.sleep)
 
     
@@ -199,7 +201,7 @@ def main():
 
     # fire up the both producers and consumers
 
-    producers = [Thread(target=producer, args=(dispatcher, relQueue, device,))
+    producers = [Thread(target=producer, args=(dispatcher, device, config_provider, ))
                  for device in config.devices]
 
     consumers = [Thread(target=consumer, args=(queue, config, ))]
