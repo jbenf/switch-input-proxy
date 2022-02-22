@@ -71,7 +71,7 @@ def consumer(queue: Queue[Event], config: Configuration):
         try:
             bindings = ev.deviceConfig.mappings.get(ev.payload.code, [])
 
-            events: Dict[str, Tuple[str, int]] = {}
+            events: Dict[str, int] = {}
             for b in bindings:
                 g = gamepads[b.address]
 
@@ -84,13 +84,13 @@ def consumer(queue: Queue[Event], config: Configuration):
                 else:
                     state = b.zero_pos
                 
-                existing_event = events.get(ev.payload.code, None)
+                existing_event = events.get(b.invoke, None)
 
-                if existing_event is None or existing_event[1] == b.zero_pos:
-                    events[ev.payload.code] = (b.invoke, state)
+                if existing_event is None or existing_event == b.zero_pos:
+                    events[b.invoke] = state
             
-            for event in events.values():
-                g.event(event[0], event[1], verbose_output=VERBOSE)
+            for invoke, state in events.items():
+                g.event(invoke, state, verbose_output=VERBOSE)
             
             if len(bindings) == 0:
                 print('unconfigured event:', str(ev.deviceConfig), ev.payload.code)

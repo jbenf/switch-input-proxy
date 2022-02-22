@@ -67,6 +67,10 @@ class EventDispatcher:
 
     def update_config(self, new_config: Configuration):
         state = self.statemachine.getState()
+        if isinstance(state, ProxyState):
+            state = ProxyState(self.output, new_config, self.on_menu_event)
+        else:
+            state = MenuState(self.output, new_config, self.on_menu_event)
         self.statemachine = DispatcherContext(state)
         self.lock.acquire()
         self.relativeHandlers = {d: { r.event : RelativeInputHandler(self.output, d, r) for r in d.relative } for d in new_config.devices }
