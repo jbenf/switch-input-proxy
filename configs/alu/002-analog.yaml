@@ -3,6 +3,7 @@ name: Analog
 devices:
   - name: HID 0838:8918
     index: 0
+    bindings: []
   
   - name: HID 0838:8918
     index: 1
