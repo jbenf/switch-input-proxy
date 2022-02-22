@@ -36,10 +36,8 @@ mypy-type-check:
   stage: test
 
   before_script:
-    - pip install mypy smbus2 types-PyYAML inputs
+    - pip install mypy smbus2 types-PyYAML inputs luma.core
   script:
-    - stubgen -p inputs
-    - grep -v "wintypes." out/inputs.pyi > tmpfile && mv tmpfile out/inputs.pyi
     - mypy .
   needs: []
 
@@ -62,11 +60,19 @@ sanity-check:
     - chmod 700 ~/.ssh
     - echo "$DEPLOYMENT_TARGET_ID" >> ~/.ssh/known_hosts
   
-deploy_stop_service:
+deploy_stop_input_proxy_service:
   stage: pre-deploy
   extends: .ssh
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl stop input-proxy
+  allow_failure: true
+  needs: [ ]
+
+deploy_stop_ui_service:
+  stage: pre-deploy
+  extends: .ssh
+  script:
+    - ssh $DEPLOYMENT_TARGET sudo systemctl stop ui-service
   allow_failure: true
   needs: [ ]
 
@@ -86,22 +92,22 @@ deploy:
         git checkout $CI_COMMIT_BRANCH
         git pull
         chmod +x input_proxy.py
+        chmod +x ui_service.py
       EOF
-  needs: [ deploy_stop_service ]
+  needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]
 
 deploy_service_description:
   stage: deploy
   extends: .ssh
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl daemon-reload
-  needs: [ deploy_stop_service ]
-  rules:
-    - changes:
-        - input-proxy.service
+  needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]
 
 deploy_start_service:
   stage: post-deploy
   extends: .ssh
   script:
     - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
+    - ssh $DEPLOYMENT_TARGET sudo systemctl start ui-service
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
+  needs: [ deploy_service_description ]
