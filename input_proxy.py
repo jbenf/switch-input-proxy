@@ -3,17 +3,19 @@
 from threading import Thread
 from queue import Queue
 import time
-from inputs import devices, InputDevice, InputEvent, UnknownEventCode, DeviceManager
+from typing import List, NamedTuple
+from inputs import devices, InputDevice, UnknownEventCode
 import sched
 import signal
 import os
 import argparse
 import glob
 import yaml
-from lib.config import INVALID, Configuration, DeviceConfig
+from lib.config import INVALID, Configuration, ConfigurationProvider, DeviceConfig
+from lib.display_connection import DisplayConnectionClient
 from lib.eventdispatcher import EventDispatcher, Event
 from lib.gamepad import Gamepad
-from lib.connection import Connection, DummyConnection, I2CConnection, I2CConnector
+from lib.connection import DummyConnection, I2CConnection, I2CConnector
 
 import sys
 print(sys.path)
@@ -85,9 +87,9 @@ def consumer(queue: Queue[Event], config: Configuration):
             raise err
 
 
-def find_device(deviceConfig: DeviceConfig):
+def find_device(deviceConfig: DeviceConfig) -> InputDevice:
     index = deviceConfig.index
-    miceAndGamepads = devices.mice + devices.gamepads
+    miceAndGamepads: List[InputDevice] = devices.mice + devices.gamepads
     sortedDevices = sorted(
         miceAndGamepads, key=InputDevice.get_char_device_path)
     for d in sortedDevices:
@@ -115,9 +117,14 @@ def signal_handler(sig, frame):
     os._exit(0)
 
 
-def loadConfig(base_config, config_path):
+def loadConfig(base_config, config_path, display_cmd = 'down'):
     try:
-        return Configuration.load(base_config, config_path)
+        c = Configuration.load(base_config, config_path)
+        
+        display = DisplayConnectionClient()
+        display.send(display_cmd, c.name)
+
+        return c
     except yaml.YAMLError as exc:
         print(exc)
         os._exit(1)
@@ -126,17 +133,50 @@ def update(dispatcher: EventDispatcher, scheduler: sched.scheduler):
     dispatcher.update()
     scheduler.enter(0.06, 1, update, (dispatcher, scheduler, ))
 
+class IndexItem():
+    def __init__(self, value):
+        self._value = value
+    
+    def value(self):
+        return self._value
+    
+    def set_value(self, value: int):
+        self._value = value
+        
 
 def main():
     queue = Queue[Event](5000)
     relQueue = Queue[Event](5000)
     scheduler = sched.scheduler(time.time, time.sleep)
 
+    
+    configFiles = glob.glob(os.path.join(args.config, '*.yaml'))
+    configFiles.sort()
+    configIndex = IndexItem(0)
+    global_config = args.glob
+    if len(configFiles) == 0 and len(global_config) == 0:
+        print("No config file found")
+        exit(1)
+    else:
+        config = loadConfig(global_config, configFiles[0])
+
+    config_provider = ConfigurationProvider(config)
+
     if VERBOSE:
         print('Config: ')
         print(config)
 
-    dispatcher = EventDispatcher(config, queue)
+    dispatcher = EventDispatcher(config_provider, queue)
+
+    dispatcher.register_menu_listener('NEXT_CONFIG', lambda: (
+        configIndex.set_value((configIndex.value() + 1) % len(configFiles)),
+        config_provider.change_config(loadConfig(global_config, configFiles[configIndex.value()]))
+    ))
+
+    dispatcher.register_menu_listener('PREV_CONFIG', lambda: (
+        configIndex.set_value(len(configFiles) - 1 if configIndex.value() == 0 else configIndex.value() - 1),
+        config_provider.change_config(loadConfig(global_config, configFiles[configIndex.value()], display_cmd='up'))
+    ))
 
     # fire up the both producers and consumers
 
@@ -227,16 +267,7 @@ DUMMY = args.dummy
 
 if args.list:
     listDevices()
+elif not args.config:
+    print("Please provide the configuration directory")
 else:
-    configPath = args.config
-    if not args.config:
-        print("Please provide the configuration directory")
-    else:
-        configFiles = glob.glob(os.path.join(args.config, '*.yaml'))
-        global_config = args.glob
-        if len(configFiles) == 0 and len(global_config) == 0:
-            print("No config file found")
-        else:
-            config = loadConfig(global_config, configFiles[0])
-            configIndex = 0
-            main()
+    main()

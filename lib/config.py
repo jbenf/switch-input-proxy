@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Callable, Dict, List
 import yaml
 
 INVALID = -1
@@ -73,3 +73,17 @@ class Configuration:
 
             return Configuration(merged)
 
+class ConfigurationProvider:
+    listeners: List[Callable[[Configuration], None]] = []
+
+    def __init__(self, initial_config: Configuration):
+        self.current_config = initial_config
+    
+    def register_config_listener(self, listener: Callable[[Configuration], None]):
+        self.listeners.append(listener)
+        listener(self.current_config)
+    
+    def change_config(self, new_config: Configuration):
+        self.current_config = new_config
+        for l in self.listeners:
+            l(new_config)

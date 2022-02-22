@@ -1,6 +1,6 @@
 from queue import Queue
 from lib.common import Event
-from lib.config import Configuration, DeviceConfig, RelativeConfig
+from lib.config import DeviceConfig, RelativeConfig
 from inputs import InputEvent
 
 
