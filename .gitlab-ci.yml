@@ -94,7 +94,7 @@ deploy:
         chmod +x input_proxy.py
         chmod +x ui_service.py
       EOF
-  needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]]
+  needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]
 
 deploy_start_service:
   stage: post-deploy
