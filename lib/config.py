@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List
 import yaml
 
-INVALID = -1
+INVALID = -999
 
 class BindingConfig:
     def __init__(self, data: dict):

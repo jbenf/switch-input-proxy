@@ -6,16 +6,16 @@ display:
   icon: 0x3
 
 menu:
-  event: BTN_BASE4
+  event: BTN_MODE
   device: 
-    name: usb gamepad
-    index: 0
+    name: HID 0838:8918
+    index: 1
     bindings:
-    - event: ABS_Y
-      state: 255
+    - event: ABS_HAT0Y
+      state: -1
       invoke: NEXT_CONFIG
-    - event: ABS_Y
-      state: 0
+    - event: ABS_HAT0Y
+      state: 1
       invoke: PREV_CONFIG
     - event: BTN_BASE3
       invoke: TOGGLE_WIFI
