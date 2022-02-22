@@ -66,6 +66,7 @@ class EventDispatcher:
             l()
 
     def update_config(self, new_config: Configuration):
+        print('Updating config: ', new_config.name)
         state = self.statemachine.getState()
         if isinstance(state, ProxyState):
             state = ProxyState(self.output, new_config, self.on_menu_event)
