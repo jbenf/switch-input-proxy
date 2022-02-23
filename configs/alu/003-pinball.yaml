@@ -23,7 +23,8 @@ devices:
     bindings:
       - event: BTN_Z
         address: 0x51
-        invoke: LY
+        state: 1
+        invoke: LX
         invoke_state: 0
         zero_pos: 127
       - event: BTN_TR
@@ -34,7 +35,8 @@ devices:
         invoke: ZL
       - event: BTN_THUMBR
         address: 0x51
-        invoke: LY
+        state: 1
+        invoke: LX
         invoke_state: 255
         zero_pos: 127
       - event: BTN_EAST
