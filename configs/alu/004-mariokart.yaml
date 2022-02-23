@@ -7,9 +7,9 @@ devices:
       - event: ABS_X
         address: 0x51
         invoke: LX
-      - event: ABS_X
+      - event: ABS_Y
         address: 0x52
-        invoke: LY
+        invoke: LX
     relative:
       - event: REL_X
         invoke: ABS_X
@@ -23,22 +23,16 @@ devices:
     bindings:
       - event: BTN_Z
         address: 0x51
-        invoke: R
+        invoke: Y
       - event: BTN_TR
         address: 0x51
-        invoke: ZR
-      - event: BTN_THUMBL
-        address: 0x51
-        invoke: ZL
-      - event: BTN_THUMBR
-        address: 0x51
-        invoke: Y
+        invoke: L
       - event: BTN_EAST
         address: 0x51
         invoke: A
       - event: BTN_C
         address: 0x51
-        invoke: L
+        invoke: R
       - event: BTN_NORTH
         address: 0x51
         invoke: X
@@ -76,28 +70,22 @@ devices:
     bindings:
       - event: BTN_Z
         address: 0x52
-        invoke: R
+        invoke: Y
       - event: BTN_TR
         address: 0x52
-        invoke: ZR
-      - event: BTN_THUMBL
-        address: 0x52
-        invoke: ZL
-      - event: BTN_THUMBR
-        address: 0x52
-        invoke: Y
+        invoke: L
       - event: BTN_EAST
         address: 0x52
         invoke: A
       - event: BTN_C
         address: 0x52
-        invoke: L
+        invoke: R
       - event: BTN_NORTH
         address: 0x52
         invoke: X
       - event: BTN_SOUTH
         address: 0x52
-        invoke: X
+        invoke: B
       - event: BTN_TR2
         address: 0x52
         invoke: PLUS
