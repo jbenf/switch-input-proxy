@@ -13,10 +13,10 @@ devices:
     relative:
       - event: REL_X
         invoke: ABS_X
-        mult: 1.5
+        mult: 2.5
       - event: REL_Y
         invoke: ABS_Y
-        mult: 1.5
+        mult: 2.5
   
   - name: HID 0838:8918
     index: 1
@@ -26,7 +26,7 @@ devices:
         state: 1
         invoke: LX
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: BTN_TR
         address: 0x51
         invoke: ZR
@@ -38,7 +38,7 @@ devices:
         state: 1
         invoke: LX
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
       - event: BTN_EAST
         address: 0x51
         invoke: A
@@ -118,22 +118,22 @@ devices:
         address: 0x51
         invoke: RX
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0X
         state: 1
         address: 0x51
         invoke: RX
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: -1
         address: 0x51
         invoke: RY
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: 1
         address: 0x51
         invoke: RY
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
