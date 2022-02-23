@@ -6,10 +6,10 @@ devices:
     bindings:
       - event: ABS_X
         address: 0x51
-        invoke: LX
+        invoke: LY
       - event: ABS_Y
         address: 0x51
-        invoke: LY
+        invoke: RY
     relative:
       - event: REL_X
         invoke: ABS_X
@@ -23,7 +23,9 @@ devices:
     bindings:
       - event: BTN_Z
         address: 0x51
-        invoke: R
+        invoke: LY
+        invoke_state: 0
+        zero_pos: 127
       - event: BTN_TR
         address: 0x51
         invoke: ZR
@@ -32,7 +34,9 @@ devices:
         invoke: ZL
       - event: BTN_THUMBR
         address: 0x51
-        invoke: L
+        invoke: LY
+        invoke_state: 255
+        zero_pos: 127
       - event: BTN_EAST
         address: 0x51
         invoke: A
@@ -74,39 +78,39 @@ devices:
   - name: HID 0838:8918
     index: 2
     bindings:
-      - event: BTN_Z
-        address: 0x52
-        invoke: R
-      - event: BTN_TR
-        address: 0x52
-        invoke: ZR
-      - event: BTN_THUMBL
-        address: 0x52
-        invoke: ZL
-      - event: BTN_THUMBR
-        address: 0x52
-        invoke: L
+      # - event: BTN_Z
+      #   address: 0x52
+      #   invoke: R
+      # - event: BTN_TR
+      #   address: 0x52
+      #   invoke: ZR
+      # - event: BTN_THUMBL
+      #   address: 0x52
+      #   invoke: ZL
+      # - event: BTN_THUMBR
+      #   address: 0x52
+      #   invoke: L
       - event: BTN_EAST
-        address: 0x52
-        invoke: A
+        address: 0x51
+        invoke: L
       - event: BTN_C
-        address: 0x52
-        invoke: B
-      - event: BTN_NORTH
-        address: 0x52
-        invoke: Y
-      - event: BTN_SOUTH
-        address: 0x52
-        invoke: X
-      - event: BTN_TR2
-        address: 0x52
-        invoke: PLUS
-      - event: BTN_TL
-        address: 0x52
-        invoke: MINUS
-      - event: BTN_MODE
-        address: 0x52
-        invoke: HOME
+        address: 0x51
+        invoke: R
+      # - event: BTN_NORTH
+      #   address: 0x52
+      #   invoke: Y
+      # - event: BTN_SOUTH
+      #   address: 0x52
+      #   invoke: X
+      # - event: BTN_TR2
+      #   address: 0x52
+      #   invoke: PLUS
+      # - event: BTN_TL
+      #   address: 0x52
+      #   invoke: MINUS
+      # - event: BTN_MODE
+      #   address: 0x52
+      #   invoke: HOME
       - event: ABS_HAT0X
         state: -1
         address: 0x51
