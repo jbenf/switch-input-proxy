@@ -1,9 +1,6 @@
 name: Global
 category: Default
 i2c_device: 1
-display:
-  addr: 0x8
-  icon: 0x3
 
 menu:
   event: BTN_BASE4

@@ -40,25 +40,25 @@ devices:
         address: 0x51
         invoke: LX
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0X
         state: 1
         address: 0x51
         invoke: LX
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: -1
         address: 0x51
         invoke: LY
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: 1
         address: 0x51
         invoke: LY
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
   
   - name: HID 0838:8918
     index: 2
@@ -95,22 +95,22 @@ devices:
         address: 0x52
         invoke: LX
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0X
         state: 1
         address: 0x52
         invoke: LX
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: -1
         address: 0x52
         invoke: LY
         invoke_state: 0
-        zero_pos: 127
+        zero_pos: 128
       - event: ABS_HAT0Y
         state: 1
         address: 0x52
         invoke: LY
         invoke_state: 255
-        zero_pos: 127
+        zero_pos: 128
