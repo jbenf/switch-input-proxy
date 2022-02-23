@@ -49,14 +49,15 @@ def producer(dispatcher: EventDispatcher, deviceConfig: DeviceConfig, config: Co
             while True:
                 try:
                     events = device.read()
-                    for event in events:
-                        dispatcher.handleEvent(deviceConfig, event, verbose_logging = args.benchmark or VERBOSE)
                     if currentConfig != config.current_config:
                         currentConfig = config.current_config
                         for d in currentConfig.devices:
                             if d == deviceConfig:
                                 deviceConfig = d
                         break
+                    for event in events:
+                        dispatcher.handleEvent(deviceConfig, event, verbose_logging = args.benchmark or VERBOSE)
+                    
                 except UnknownEventCode:
                     pass
 
