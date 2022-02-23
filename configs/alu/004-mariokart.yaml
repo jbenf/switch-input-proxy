@@ -13,10 +13,10 @@ devices:
     relative:
       - event: REL_X
         invoke: ABS_X
-        mult: 2.5
+        mult: 3.5
       - event: REL_Y
         invoke: ABS_Y
-        mult: 2.5
+        mult: 3.5
   
   - name: HID 0838:8918
     index: 1
@@ -26,13 +26,13 @@ devices:
         invoke: Y
       - event: BTN_TR
         address: 0x51
-        invoke: L
+        invoke: R
       - event: BTN_EAST
         address: 0x51
         invoke: A
       - event: BTN_C
         address: 0x51
-        invoke: R
+        invoke: L
       - event: BTN_NORTH
         address: 0x51
         invoke: X
@@ -73,13 +73,13 @@ devices:
         invoke: Y
       - event: BTN_TR
         address: 0x52
-        invoke: L
+        invoke: R
       - event: BTN_EAST
         address: 0x52
         invoke: A
       - event: BTN_C
         address: 0x52
-        invoke: R
+        invoke: L
       - event: BTN_NORTH
         address: 0x52
         invoke: X
