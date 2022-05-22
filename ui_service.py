@@ -9,14 +9,6 @@ from PIL import ImageFont
 
 from lib.display_connection import DisplayConnectionMessage, DisplayConnectionServer
 
-hello_world = [
-    "",
-    "Hello World",
-    "Mario Kart",
-    "Pinball",
-    "Super Monkeyball"
-]
-
 def make_font(name, size):
     font_path = str(Path(__file__).resolve().parent.joinpath(name))
     return ImageFont.truetype(font_path, size)
