@@ -5,7 +5,7 @@ StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-Restart=never
+Restart=always
 RestartSec=5
 User=pi
 ExecStart=/data/input_proxy/ui_service.py
