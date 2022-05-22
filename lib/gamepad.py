@@ -175,8 +175,10 @@ class Gamepad():
     def __init__(self, connection: Connection):
         self.connection = connection
 
-    def event(self, invoke: str, state: int):
+    def event(self, invoke: str, state: int, verbose_output = False):
         """handle a input event"""
+        if verbose_output:
+            print("invoking ", invoke, " ", state)
         func = self.handling.get(invoke, None)
         if func is not None:
             func(self, state)

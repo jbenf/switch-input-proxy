@@ -3,7 +3,8 @@
 from threading import Thread
 from queue import Queue
 import time
-from typing import List, NamedTuple
+import sys
+from typing import Dict, List, Tuple
 from inputs import devices, InputDevice, UnknownEventCode
 import sched
 import signal
@@ -38,17 +39,25 @@ class AnalogConfig():
         self.RELATIVE = cfg.get('RELATIVE', True)
 
 
-def producer(dispatcher: EventDispatcher, relQueue: Queue[Event], deviceConfig: DeviceConfig):
+def producer(dispatcher: EventDispatcher, deviceConfig: DeviceConfig, config: ConfigurationProvider):
     if VERBOSE:
         print('Starting Producer ', deviceConfig)
+    currentConfig = config.current_config
     while True:
         try:
             device = find_device(deviceConfig)
             while True:
                 try:
                     events = device.read()
+                    if currentConfig != config.current_config:
+                        currentConfig = config.current_config
+                        for d in currentConfig.devices:
+                            if d == deviceConfig:
+                                deviceConfig = d
+                        break
                     for event in events:
                         dispatcher.handleEvent(deviceConfig, event, verbose_logging = args.benchmark or VERBOSE)
+                    
                 except UnknownEventCode:
                     pass
 
@@ -69,15 +78,27 @@ def consumer(queue: Queue[Event], config: Configuration):
         ev = queue.get()
         try:
             bindings = ev.deviceConfig.mappings.get(ev.payload.code, [])
+
+            events: Dict[str, int] = {}
             for b in bindings:
                 g = gamepads[b.address]
+
+                state = 0
                 
                 if b.state == INVALID:
-                    g.event(b.invoke, ev.payload.state)
+                    state = ev.payload.state
                 elif b.state == ev.payload.state:
-                    g.event(b.invoke, 1)
+                    state = b.invoke_state
                 else:
-                    g.event(b.invoke, 0)
+                    state = b.zero_pos
+                
+                existing_event = events.get(b.invoke, None)
+
+                if existing_event is None or existing_event == b.zero_pos:
+                    events[b.invoke] = state
+            
+            for invoke, state in events.items():
+                g.event(invoke, state, verbose_output=VERBOSE)
             
             if len(bindings) == 0:
                 print('unconfigured event:', str(ev.deviceConfig), ev.payload.code)
@@ -113,9 +134,6 @@ def listDevices():
         print(d)
 
 
-def signal_handler(sig, frame):
-    os._exit(0)
-
 
 def loadConfig(base_config, config_path, display_cmd = 'down'):
     try:
@@ -142,11 +160,19 @@ class IndexItem():
     
     def set_value(self, value: int):
         self._value = value
-        
+
+
+
+def except_hook(exctype, value, traceback):
+    os._exit(1)
+
+def signal_handler(sig, frame):
+    os._exit(0)
 
 def main():
+    sys.excepthook = except_hook
+
     queue = Queue[Event](5000)
-    relQueue = Queue[Event](5000)
     scheduler = sched.scheduler(time.time, time.sleep)
 
     
@@ -180,7 +206,7 @@ def main():
 
     # fire up the both producers and consumers
 
-    producers = [Thread(target=producer, args=(dispatcher, relQueue, device,))
+    producers = [Thread(target=producer, args=(dispatcher, device, config_provider, ))
                  for device in config.devices]
 
     consumers = [Thread(target=consumer, args=(queue, config, ))]

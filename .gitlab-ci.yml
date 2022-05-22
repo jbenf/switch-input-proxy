@@ -96,13 +96,6 @@ deploy:
       EOF
   needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]
 
-deploy_service_description:
-  stage: deploy
-  extends: .ssh
-  script:
-    - ssh $DEPLOYMENT_TARGET sudo systemctl daemon-reload
-  needs: [ deploy_stop_input_proxy_service, deploy_stop_ui_service ]
-
 deploy_start_service:
   stage: post-deploy
   extends: .ssh
@@ -110,4 +103,4 @@ deploy_start_service:
     - ssh $DEPLOYMENT_TARGET sudo systemctl start input-proxy
     - ssh $DEPLOYMENT_TARGET sudo systemctl start ui-service
     - ssh $DEPLOYMENT_TARGET journalctl -u input-proxy -n 20
-  needs: [ deploy_service_description ]
+  needs: [ deploy ]

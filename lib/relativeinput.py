@@ -6,7 +6,7 @@ from inputs import InputEvent
 
 class RelativeInputHandler:
     def __init__(self, output: Queue[Event], device: DeviceConfig, relative: RelativeConfig):
-        self.abs: float = 127.0
+        self.abs: float = 128.0
         self.buffer: Queue[Event] = Queue()
         self.output = output
         self.relative = relative
@@ -17,7 +17,7 @@ class RelativeInputHandler:
         self.buffer.put(Event(device, event))
 
     def update(self):
-        self.abs = (2*self.abs+127)/3
+        self.abs = (2*self.abs+128)/3
 
         self.active |= not self.buffer.empty()
 
@@ -35,7 +35,7 @@ class RelativeInputHandler:
                 "code": self.relative.invoke
             }
             self.output.put(Event(self.device, InputEvent(self.device, event_info)))
-            self.active = value != 127
+            self.active = value != 128
     
     def value(self) -> int:
         return min(255, max(0, int(round(self.abs))))

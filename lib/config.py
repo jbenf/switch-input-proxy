@@ -1,14 +1,16 @@
 from typing import Callable, Dict, List
 import yaml
 
-INVALID = -1
+INVALID = -999
 
 class BindingConfig:
     def __init__(self, data: dict):
-        self.event = data['event']
-        self.state = data.get('state', INVALID)
-        self.invoke = data['invoke']
-        self.address = data.get('address', INVALID)
+        self.event: str = data['event']
+        self.state: int = data.get('state', INVALID)
+        self.invoke: str = data['invoke']
+        self.address: int = data.get('address', INVALID)
+        self.invoke_state: int = data.get('invoke_state', 1)
+        self.zero_pos: int = data.get('zero_pos', 0)
 
 class DeviceConfig:
     def __init__(self, data: dict):
