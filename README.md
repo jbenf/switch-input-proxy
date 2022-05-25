@@ -12,7 +12,7 @@ It is not very good documented and requires a bit of soldering, bash work and YA
 
 | ![Raspberry PI with two Atmega32u4 virtual controllers](./doc/pi.jpg) | 
 |:--:| 
-| *Raspberry PI with two Atmega32u4 virtual controller* |
+| *Raspberry PI with two Atmega32u4 virtual controllers* |
 
 ## Switch-I2C-Controller
 
