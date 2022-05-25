@@ -24,7 +24,7 @@ I added to small _SSD 1306_ Oled screen to be able to display the currently acti
 
 ## Configuration
 
-_Switch Input Proxy_ uses two configuration files, the _Global Configuration_ and the _Profile Configuration_. Both files are merged and support the same values. The _Profile Configuration_ have to be placed in a seperate directory and can be switched with a key combination.
+_Switch Input Proxy_ uses two configuration files, the _Global Configuration_ and the _Profile Configuration_. Both files are merged and support the same values. The _Profile Configuration Files_ have to be placed in a seperate directory and can be switched with a key combination.
 
 ### Global Config Example
 
@@ -36,7 +36,7 @@ _Switch Input Proxy_ uses two configuration files, the _Global Configuration_ an
       event: BTN_MODE                   # HID event type used as a menu modifier key, find the type name with `evtest`
       device: 
         name: HID 0838:8918             # Name of the HID device, find it with `evtest`
-        index: 1                        # Sometimes multiple USB devices have the same name. _index: 0_ will pick the first device etc.
+        index: 1                        # Sometimes multiple USB devices have the same name. index: 0 will pick the first device etc.
         bindings:                       # Menu bindings
         - event: ABS_HAT0Y              # HID event type
           state: 1                      # value of the HID event at which the binding will fire
