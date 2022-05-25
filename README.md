@@ -7,6 +7,8 @@ I developed this software to be able to connect the Controls of my Atgames Legen
 **This project is a prototype and never might leave this state because it does everything I need it to do, at this moment in time at least.**
 It is not very good documented and requires a bit of soldering, bash work and YAML-file editing to set up and configure. 
 
+[![Demo Video](https://img.youtube.com/vi/7TYzgeDPCY8/0.jpg)](https://www.youtube.com/watch?v=7TYzgeDPCY8)
+
 ## Switch-I2C-Controller
 
 I have to thank [Molorius](https://github.com/Molorius) for this great piece of software, it did exactly what I needed for the _Switch Input Proxy_. Thanks to using I2C it is easy to connect 4 (or even more) gamepads to the Nintendo Switch. Each virtual controller needs one Atmega32u4 dev board and all are connected to the I2C bus of the Raspberry PI. All dev boards need a unique I2C address, please refer to the documentation of the [Switch-I2C-Controller Github project](https://github.com/Molorius/Switch-I2C-Controller) for details how to flash it and how to change the address.
