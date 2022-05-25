@@ -24,7 +24,7 @@ I added to small _SSD 1306_ Oled screen to be able to display the currently acti
 
 ## Configuration
 
-_Switch Input Proxy_ uses to configuration files, the _Global Configuration_ and the _Profile Configuration_. Both files are merged and support the same values. The _Profile Configuration_ have to be placed in a seperate directory and can be switched with a key combination.
+_Switch Input Proxy_ uses two configuration files, the _Global Configuration_ and the _Profile Configuration_. Both files are merged and support the same values. The _Profile Configuration_ have to be placed in a seperate directory and can be switched with a key combination.
 
 ### Global Config Example
 
