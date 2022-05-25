@@ -7,7 +7,7 @@ I developed this software to be able to connect the Controls of my Atgames Legen
 **This project is a prototype and never might leave this state because it does everything I need it to do, at this moment in time at least.**
 It is not very good documented and requires a bit of soldering, bash work and YAML-file editing to set up and configure. 
 
-[![Demo Video](https://img.youtube.com/vi/7TYzgeDPCY8/0.jpg)](https://www.youtube.com/watch?v=7TYzgeDPCY8)
+[![Demo Video](https://img.youtube.com/vi/ikM0AD4KePc/0.jpg)](https://www.youtube.com/watch?v=ikM0AD4KePc)
 
 ## Switch-I2C-Controller
 
