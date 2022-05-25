@@ -9,6 +9,11 @@ It is not very good documented and requires a bit of soldering, bash work and YA
 
 [![Demo Video](./doc/video_preview.png)](https://www.youtube.com/watch?v=ikM0AD4KePc)
 
+
+| ![Raspberry PI with two Atmega32u4 virtual controllers](./doc/pi.jpg) | 
+|:--:| 
+| *Raspberry PI with two Atmega32u4 virtual controller* |
+
 ## Switch-I2C-Controller
 
 I have to thank [Molorius](https://github.com/Molorius) for this great piece of software, it did exactly what I needed for the _Switch Input Proxy_. Thanks to using I2C it is easy to connect 4 (or even more) gamepads to the Nintendo Switch. Each virtual controller needs one Atmega32u4 dev board and all are connected to the I2C bus of the Raspberry PI. All dev boards need a unique I2C address, please refer to the documentation of the [Switch-I2C-Controller Github project](https://github.com/Molorius/Switch-I2C-Controller) for details how to flash it and how to change the address.
