@@ -20,7 +20,7 @@ I have to thank [Molorius](https://github.com/Molorius) for this great piece of 
 
 ## Display
 
-I added to small _SSD 1306_ Oled screen to be able to display the currently active configuration profile. This display is also connected via I2C to the PI.
+I added a small _SSD 1306_ Oled screen to be able to display the currently active configuration profile. This display is also connected via I2C to the PI.
 
 ## Configuration
 
